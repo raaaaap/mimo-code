@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小米狗精灵 - UI 演示</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a2e;
+    color: #eee;
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  h1 {
+    font-size: 28px;
+    color: #FF6900;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  .card {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: #FF6900;
+  }
+
+  .card-title {
+    font-size: 16px;
+    color: #FF6900;
+    margin-bottom: 16px;
+    font-weight: bold;
+  }
+
+  .sprite-container {
+    background: #0a0a1a;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sprite {
+    font-size: 16px;
+    line-height: 1.4;
+    white-space: pre;
+    color: #FF6900;
+    text-shadow: 0 0 10px rgba(255, 105, 0, 0.3);
+  }
+
+  .sprite .highlight { color: #FF8C33; }
+  .sprite .dark { color: #CC5500; }
+  .sprite .white { color: #FFFFFF; }
+  .sprite .heart { color: #FF6900; animation: float 1s ease-in-out infinite; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-8px); opacity: 0.7; }
+  }
+
+  @keyframes wag {
+    0%, 100% { transform: rotate(-15deg); }
+    50% { transform: rotate(15deg); }
+  }
+
+  @keyframes blink {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0; }
+  }
+
+  .tail { transform-origin: bottom center; animation: wag 0.6s ease-in-out infinite; display: inline-block; }
+  .blink-eyes { animation: blink 3s ease-in-out infinite; }
+
+  .description {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+  }
+
+  .color-palette {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .color-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+
+  .color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .section-title {
+    font-size: 20px;
+    color: #FF6900;
+    margin: 40px 0 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  .terminal-mock {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .terminal-header {
+    background: #161b22;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot.red { background: #ff5f57; }
+  .terminal-dot.yellow { background: #febc2e; }
+  .terminal-dot.green { background: #28c840; }
+
+  .terminal-title {
+    color: #8b949e;
+    font-size: 12px;
+    margin-left: 8px;
+  }
+
+  .terminal-body {
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .terminal-prompt { color: #7ee787; }
+  .terminal-output { color: #c9d1d9; }
+  .terminal-accent { color: #FF6900; }
+  .terminal-dim { color: #484f58; }
+
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .comparison .card { text-align: center; }
+
+  .badge {
+    display: inline-block;
+    background: #FF6900;
+    color: #000;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+  }
+
+  .footer {
+    margin-top: 60px;
+    color: #555;
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>🐕 小米狗精灵</h1>
+<p class="subtitle">Xiaomi Dog Companion Sprite — UI Demo</p>
+
+<!-- Design Concept -->
+<div class="section-title">📐 设计理念</div>
+<div class="demo-grid">
+  <div class="card">
+    <div class="card-title">MI 解构 = 狗</div>
+    <div class="description">
+      <strong>M = 狗耳</strong> — 两个下垂的弧形 ╲ ╱，模拟 MI 的拱形但更圆润柔和<br>
+      <strong>I = 狗尾</strong> — 竖线 │，摇动时变为 ╱ 或 ╲（比猫尾更活泼）<br>
+      <strong>超椭圆 = 狗脸</strong> — ╭╮╰╯ 圆角括号，比猫脸略宽（更憨厚）
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">配色方案</div>
+    <div class="color-palette">
+      <div class="color-chip">
+        <div class="color-swatch" style="background:#FF6900"></div>
+        <span>小米橙 #FF6900</span>
+      </div>
+      <div class="color-chip">
+        <div class="color-swatch" style="background:#FF8C33"></div>
+        <span>浅橙 #FF8C33</span>
+      </div>
+      <div class="color-chip">
+        <div class="color-swatch" style="background:#FFFFFF"></div>
+        <span>纯白 #FFFFFF</span>
+      </div>
+      <div class="color-chip">
+        <div class="color-swatch" style="background:#CC5500"></div>
+        <span>深橙 #CC5500</span>
+      </div>
+    </div>
+    <div class="description" style="margin-top:12px">
+      固定小米橙，不随稀有度变化 — 强化品牌统一性
+    </div>
+  </div>
+</div>
+
+<!-- Sprite Frames -->
+<div class="section-title">🎨 精灵帧展示</div>
+<div class="demo-grid">
+
+  <!-- Idle Rest -->
+  <div class="card">
+    <div class="card-title">帧0：休息（Idle Rest）</div>
+    <div class="sprite-container">
+      <pre class="sprite"><span class="highlight">  ╲        ╱</span>
+<span class="highlight">   ╲──────╱</span>
+<span class="highlight">   │</span><span class="white"> ● </span>  <span class="white">● </span><span class="highlight">│</span>
+<span class="highlight">   │</span>  <span>▼</span>    <span class="highlight">│</span>
+<span class="highlight">    ╲    ╱</span>
+<span class="highlight">     ╰──╯</span><span class="dark">│</span>
+<span class="dark">           │</span></pre>
+    </div>
+    <div class="description">耳朵下垂，尾巴垂直。默认闲置状态。</div>
+  </div>
+
+  <!-- Look Left -->
+  <div class="card">
+    <div class="card-title">帧1：左顾（Look Left）</div>
+    <div class="sprite-container">
+      <pre class="sprite"><span class="highlight">  ╲        ╱</span>
+<span class="highlight">   ╲──────╱</span>
+<span class="highlight">   │</span><span class="white">●</span>     <span class="white">● </span><span class="highlight">│</span>
+<span class="highlight">   │</span>  <span>▼</span>    <span class="highlight">│</span>
+<span class="highlight">    ╲    ╱</span>
+<span class="highlight">     ╰──╯</span> <span class="dark">│</span>
+<span class="dark">          ╱</span></pre>
+    </div>
+    <div class="description">头微左转，尾巴右摆。好奇张望。</div>
+  </div>
+
+  <!-- Look Right -->
+  <div class="card">
+    <div class="card-title">帧2：右顾（Look Right）</div>
+    <div class="sprite-container">
+      <pre class="sprite"><span class="highlight">  ╲        ╱</span>
+<span class="highlight">   ╲──────╱</span>
+<span class="highlight">   │</span><span class="white"> ● </span>  <span class="white">●</span><span class="highlight">  │</span>
+<span class="highlight">   │</span>  <span>▼</span>    <span class="highlight">│</span>
+<span class="highlight">    ╲    ╱</span>
+<span class="highlight">     ╰──╯</span>
+<span class="dark">╲</span></pre>
+    </div>
+    <div class="description">头微右转，尾巴左摆。警觉观察。</div>
+  </div>
+
+  <!-- Blink -->
+  <div class="card">
+    <div class="card-title">帧3：眨眼（Blink）</div>
+    <div class="sprite-container">
+      <pre class="sprite"><span class="highlight">  ╲        ╱</span>
+<span class="highlight">   ╲──────╱</span>
+<span class="highlight blink-eyes">   │</span><span class="white blink-eyes"> ─ </span>  <span class="white blink-eyes">─ </span><span class="highlight blink-eyes">│</span>
+<span class="highlight">   │</span>  <span>▼</span>    <span class="highlight">│</span>
+<span class="highlight">    ╲    ╱</span>
+<span class="highlight">     ╰──╯</span><span class="dark">│</span>
+<span class="dark">           │</span></pre>
+    </div>
+    <div class="description">眼睛变为横线 ─。随机触发插入闲置序列。</div>
+  </div>
+
+  <!-- Happy -->
+  <div class="card">
+    <div class="card-title">帧4：开心（Happy）<span class="badge">/buddy pet</span></div>
+    <div class="sprite-container">
+      <pre class="sprite"><span class="highlight">  ╲        ╱</span>
+<span class="highlight">   ╲──────╱</span>
+<span class="highlight">   │</span><span class="white"> ◠ </span>  <span class="white">◠ </span><span class="highlight">│</span>
+<span class="highlight">   │</span> <span> ╰╯</span>  <span class="highlight">│</span>
+<span class="highlight">    ╲    ╱</span>
+<span class="highlight">     ╰──╯</span><span class="dark">│</span>
+<span class="dark">           │</span>
+<span class="heart"> ♥ ♥    ♥ ♥</span></pre>
+    </div>
+    <div class="description">被抚摸时触发，爱心飘浮动画（2.5秒）。</div>
+  </div>
+
+  <!-- Surprised -->
+  <div class="card">
+    <div class="card-title">帧5：惊讶（Surprised）</div>
+    <div class="sprite-container">
+      <pre class="sprite"><span class="highlight">  ╲        ╱</span>
+<span class="highlight">   ╲──────╱</span>
+<span class="highlight">   │</span><span class="white"> ◉ </span>  <span class="white">◉ </span><span class="highlight">│</span>
+<span class="highlight">   │</span>  <span>○</span>   <span class="highlight">│</span>
+<span class="highlight">    ╲    ╱</span>
+<span class="highlight">     ╰──╯</span><span class="dark">│</span>
+<span class="dark">           │</span></pre>
+    </div>
+    <div class="description">任务完成时触发，眼睛放大、嘴巴张开。</div>
+  </div>
+
+  <!-- Thinking -->
+  <div class="card">
+    <div class="card-title">帧6：思考（Thinking）</div>
+    <div class="sprite-container">
+      <pre class="sprite"><span class="highlight">  ╲        ╱</span>
+<span class="highlight">   ╲──────╱</span>
+<span class="highlight">   │</span><span class="white"> ● </span>  <span class="white">● </span><span class="highlight">│</span>
+<span class="highlight">   │</span> <span> ∪</span>   <span class="highlight">│</span>
+<span class="highlight">    ╲    ╱</span>
+<span class="highlight">     ╰──╯</span> <span class="dark">╱</span>
+<span class="dark">          ╱</span></pre>
+    </div>
+    <div class="description">AI 处理中，嘴巴张开 ∪，尾巴卷起。</div>
+  </div>
+
+  <!-- Sleepy -->
+  <div class="card">
+    <div class="card-title">帧7：困倦（Sleepy）</div>
+    <div class="sprite-container">
+      <pre class="sprite">      <span class="dim">z</span>
+<span class="highlight">  ╲        ╱</span>
+<span class="highlight">   ╲──────╱</span>
+<span class="highlight blink-eyes">   │</span><span class="white blink-eyes"> ─ </span>  <span class="white blink-eyes">─ </span><span class="highlight blink-eyes">│</span>
+<span class="highlight">   │</span>  <span>▼</span>    <span class="highlight">│</span>
+<span class="highlight">    ╲    ╱</span>
+<span class="highlight">     ╰──╯</span><span class="dark">│</span>
+<span class="dark">           │</span></pre>
+    </div>
+    <div class="description">空闲超过60秒触发，z 字符飘浮。</div>
+  </div>
+
+</div>
+
+<!-- Cat vs Dog Comparison -->
+<div class="section-title">🐱 vs 🐕 对比</div>
+<div class="comparison">
+  <div class="card">
+    <div class="card-title">小米猫</div>
+    <div class="sprite-container">
+      <pre class="sprite">   <span class="highlight">╱╲    ╱╲</span>
+  <span class="highlight">╱  ╲──╱  ╲</span>
+  <span class="highlight">│</span>  <span class="white">●</span>    <span class="white">●</span> <span class="highlight">│</span>
+  <span class="highlight">│</span>    <span>ω</span>    <span class="highlight">│</span>
+   <span class="highlight">╲      ╱</span>
+    <span class="highlight">╰────╯</span><span class="dark">│</span>
+           <span class="dark">│</span></pre>
+    </div>
+    <div class="description">
+      耳朵朝上 ╱╲（尖锐）<br>
+      嘴巴 ω（猫嘴）<br>
+      脸型窄（优雅）
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">小米狗 <span class="badge">NEW</span></div>
+    <div class="sprite-container">
+      <pre class="sprite">  <span class="highlight">╲        ╱</span>
+   <span class="highlight">╲──────╱</span>
+   <span class="highlight">│</span>  <span class="white">●</span>    <span class="white">●</span> <span class="highlight">│</span>
+   <span class="highlight">│</span>  <span>▼</span>    <span class="highlight">│</span>
+    <span class="highlight">╲    ╱</span>
+     <span class="highlight">╰──╯</span><span class="dark">│</span>
+           <span class="dark">│</span></pre>
+    </div>
+    <div class="description">
+      耳朵朝下 ╲ ╱（下垂）<br>
+      嘴巴 ▼（狗鼻）<br>
+      脸型宽（憨厚）
+    </div>
+  </div>
+</div>
+
+<!-- Terminal Mock -->
+<div class="section-title">💻 终端效果模拟</div>
+<div class="terminal-mock">
+  <div class="terminal-header">
+    <div class="terminal-dot red"></div>
+    <div class="terminal-dot yellow"></div>
+    <div class="terminal-dot green"></div>
+    <span class="terminal-title">mimo-code — ~/my-project</span>
+  </div>
+  <div class="terminal-body">
+    <span class="terminal-prompt">❯ mimo</span><br>
+    <span class="terminal-dim">─────────────────────────────────────────</span><br>
+    <span class="terminal-accent">  ╲        ╱</span><br>
+    <span class="terminal-accent">   ╲──────╱</span><br>
+    <span class="terminal-accent">   │</span> <span class="terminal-output"> ●    ● </span><span class="terminal-accent">│</span><br>
+    <span class="terminal-accent">   │</span>  <span class="terminal-output">▼</span>    <span class="terminal-accent">│</span><br>
+    <span class="terminal-accent">    ╲    ╱</span><br>
+    <span class="terminal-accent">     ╰──╯</span><span class="terminal-dim">│</span><br>
+    <span class="terminal-dim">           │</span><br>
+    <span class="terminal-dim">─────────────────────────────────────────</span><br>
+    <span class="terminal-output">  你好！我是小米狗 🐕</span><br>
+    <span class="terminal-output">  有什么可以帮你的？</span><br>
+    <br>
+    <span class="terminal-prompt">❯ <span class="terminal-output" id="typing-demo"></span><span style="border-right:2px solid #7ee787;animation:blink 1s infinite">&nbsp;</span></span>
+  </div>
+</div>
+
+<!-- Speech Bubbles -->
+<div class="section-title">💬 语音气泡语录</div>
+<div class="demo-grid">
+  <div class="card">
+    <div class="card-title">小米狗语录</div>
+    <div class="description" style="font-size:15px; line-height:2.2">
+      「正在啃代码中...」🐕<br>
+      「为发烧而生」🔥<br>
+      「Are you OK?」😄<br>
+      「专注、极致、口碑、快」💪<br>
+      「站在风口上，猪都能飞起来」🐷<br>
+      「小米，永远相信美好的事情即将发生」✨<br>
+      「汪！」🐾<br>
+      「这个 bug 我来叼走」🦴
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">状态感知</div>
+    <div class="description" style="font-size:14px; line-height:2">
+      <strong>AI 思考中</strong> → 思考帧（尾巴卷起）<br>
+      <strong>任务完成</strong> → 惊讶帧 → 开心帧<br>
+      <strong>长时间无操作</strong> → 困倦帧 + z<br>
+      <strong>用户输入时</strong> → 闲置循环帧<br>
+      <strong>/buddy pet</strong> → 开心帧 + 爱心飘浮
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  mimo-code Xiaomi Dog Companion Sprite Demo · 2026-05-30
+</div>
+
+<script>
+  // Typing animation
+  const text = '帮我写一个快速排序...';
+  let i = 0;
+  const el = document.getElementById('typing-demo');
+  function type() {
+    if (i < text.length) {
+      el.textContent += text[i];
+      i++;
+      setTimeout(type, 80 + Math.random() * 60);
+    }
+  }
+  setTimeout(type, 1000);
+</script>
+
+</body>
+</html>
