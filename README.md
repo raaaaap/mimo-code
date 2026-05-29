@@ -68,7 +68,7 @@ Think of it as your AI pair programmer that lives in the terminal.
 ### Install
 
 ```bash
-git clone https://github.com/your-username/mimo-code.git
+git clone https://github.com/raaaaap/mimo-code.git
 cd mimo-code
 npm install
 ```
@@ -303,7 +303,7 @@ Contributions are welcome! Here's how to get started:
 ### Development Setup
 
 ```bash
-git clone https://github.com/your-username/mimo-code.git
+git clone https://github.com/raaaaap/mimo-code.git
 cd mimo-code
 npm install
 npm run dev
