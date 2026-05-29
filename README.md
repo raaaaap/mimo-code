@@ -4,6 +4,8 @@
 
 **A CLI coding agent powered by the MiMo large language model**
 
+**English** | [简体中文](README_zh-CN.md) | [日本語](README_ja.md)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-≥18-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
