@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Text, Box, useApp, useInput } from 'ink';
+import { Text, Box, useApp, useInput, useStdout } from 'ink';
 import { MessageList } from '../components/Messages/MessageList.js';
 import { PromptInput } from '../components/PromptInput/PromptInput.js';
 import { useAppState, useAppStateStore } from '../state/AppState.js';
@@ -36,16 +36,119 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
   const verbose = useAppState(selectVerbose);
   const store = useAppStateStore();
   const { exit } = useApp();
+  const { stdout } = useStdout();
   const [catState, setCatState] = useState<CatState>('idle');
   const [showCommands, setShowCommands] = useState(false);
 
+  // Scroll state
+  const [scrollOffset, setScrollOffset] = useState(0);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const prevMessageCountRef = useRef(0);
+
   const apiEndpoint = useAppState((s) => s.apiEndpoint);
   const debug = useAppState((s) => s.debug);
+
+  // Enable mouse tracking for scroll wheel support
+  useEffect(() => {
+    if (stdout) {
+      // Enable mouse tracking (SGR mode for better compatibility)
+      stdout.write('\x1b[?1006h'); // Enable SGR extended mouse mode
+      stdout.write('\x1b[?1003h'); // Enable all mouse events
+    }
+    return () => {
+      if (stdout) {
+        stdout.write('\x1b[?1003l'); // Disable all mouse events
+        stdout.write('\x1b[?1006l'); // Disable SGR extended mouse mode
+      }
+    };
+  }, [stdout]);
+
+  // Auto-scroll to bottom when new messages arrive (if was at bottom)
+  useEffect(() => {
+    const currentCount = messages.length;
+    if (currentCount > prevMessageCountRef.current && isAtBottom) {
+      setScrollOffset(0);
+    }
+    prevMessageCountRef.current = currentCount;
+  }, [messages.length, isAtBottom]);
 
   // Toggle command menu with Tab
   useInput((input, key) => {
     if (key.tab) {
       setShowCommands(prev => !prev);
+      return;
+    }
+
+    // Keyboard scrolling
+    if (key.pageUp) {
+      setScrollOffset(prev => prev + 20);
+      setIsAtBottom(false);
+      return;
+    }
+    if (key.pageDown) {
+      setScrollOffset(prev => {
+        const next = Math.max(0, prev - 20);
+        if (next === 0) setIsAtBottom(true);
+        return next;
+      });
+      return;
+    }
+    if (key.ctrl && input === 'home') {
+      // Scroll to top (max offset)
+      setScrollOffset(99999);
+      setIsAtBottom(false);
+      return;
+    }
+    if (key.ctrl && input === 'end') {
+      // Scroll to bottom
+      setScrollOffset(0);
+      setIsAtBottom(true);
+      return;
+    }
+
+    // Mouse wheel detection via escape sequences
+    // Ink passes mouse events as raw input strings
+    if (typeof input === 'string') {
+      // SGR mouse event: ESC [ < Cb ; Cx ; Cy M/m
+      const sgrMatch = input.match(/\x1b\[<(\d+);(\d+);(\d+)([Mm])/);
+      if (sgrMatch) {
+        const cb = parseInt(sgrMatch[1], 10);
+        // cb & 64 === 64 means scroll wheel
+        if ((cb & 64) === 64) {
+          if ((cb & 1) === 0) {
+            // Scroll up (wheel up)
+            setScrollOffset(prev => prev + 5);
+            setIsAtBottom(false);
+          } else {
+            // Scroll down (wheel down)
+            setScrollOffset(prev => {
+              const next = Math.max(0, prev - 5);
+              if (next === 0) setIsAtBottom(true);
+              return next;
+            });
+          }
+          return;
+        }
+      }
+
+      // X10 mouse event format: ESC [ M Cb Cx Cy
+      const x10Match = input.match(/\x1b\[M(.)(.)(.)/);
+      if (x10Match) {
+        const cb = x10Match[1].charCodeAt(0) - 32;
+        if ((cb & 64) === 64) {
+          if ((cb & 1) === 0) {
+            setScrollOffset(prev => prev + 5);
+            setIsAtBottom(false);
+          } else {
+            setScrollOffset(prev => {
+              const next = Math.max(0, prev - 5);
+              if (next === 0) setIsAtBottom(true);
+              return next;
+            });
+          }
+          return;
+        }
+      }
     }
   });
 
@@ -116,6 +219,10 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       store.setState({ isProcessing: true });
       setCatState('thinking');
 
+      // Auto-scroll to bottom on new submission
+      setScrollOffset(0);
+      setIsAtBottom(true);
+
       try {
         for await (const msg of engine.submitMessage(input)) {
           store.setState({ messages: engine.getMessages(), isProcessing: true });
@@ -165,8 +272,14 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
         <CompanionSprite state={catState} />
       </Box>
 
-      {/* Messages */}
-      <MessageList messages={messages} />
+      {/* Messages with scrolling */}
+      <MessageList
+        messages={messages}
+        scrollOffset={scrollOffset}
+        onScrollChange={setScrollOffset}
+        isAtBottom={isAtBottom}
+        onSetIsAtBottom={setIsAtBottom}
+      />
 
       {/* Input area */}
       <Box marginTop={1} borderStyle="round" borderColor="#FF6900" paddingX={1}>
