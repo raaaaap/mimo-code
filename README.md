@@ -1,26 +1,38 @@
-<div align="center">
+<p align="center">
+  <img src="docs/logo.svg" alt="Mimo Code" width="640"/>
+</p>
 
-# 🐱 Mimo Code
+<p align="center">
+  <strong>English</strong>
+  &nbsp;·&nbsp;
+  <a href="./README_zh-CN.md">简体中文</a>
+  &nbsp;·&nbsp;
+  <a href="./README_ja.md">日本語</a>
+</p>
 
-**A CLI coding agent powered by the MiMo large language model**
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&color=3b82f6&labelColor=161b22" alt="License: MIT"/></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-≥18-green.svg?style=flat-square&color=3fb950&labelColor=161b22&logo=nodedotjs&logoColor=white" alt="Node.js"/></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.5-blue.svg?style=flat-square&color=3178c6&labelColor=161b22&logo=typescript&logoColor=white" alt="TypeScript"/></a>
+  <a href="https://github.com/raaaaap/mimo-code/stargazers"><img src="https://img.shields.io/github/stars/raaaaap/mimo-code.svg?style=flat-square&color=dbab09&labelColor=161b22&logo=github&logoColor=white" alt="GitHub stars"/></a>
+</p>
 
-**English** | [简体中文](README_zh-CN.md) | [日本語](README_ja.md)
+<br/>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-≥18-green.svg)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
+<h3 align="center">A CLI coding agent powered by the MiMo large language model.</h3>
+<p align="center">Built with TypeScript and Ink — your AI pair programmer that lives in the terminal.</p>
 
-[Features](#-features) · [Quick Start](#-quick-start) · [Usage](#-usage) · [Architecture](#-architecture) · [Configuration](#-configuration) · [Contributing](#-contributing)
+<br/>
 
-</div>
+<p align="center">
+  <img src="docs/assets/hero-terminal.svg" alt="Mimo Code — interactive REPL with MiMo cat mascot, tool execution, and code generation" width="860"/>
+</p>
 
----
+<br/>
 
 ## Overview
 
 Mimo Code is a terminal-based AI coding assistant that brings the power of the MiMo large language model to your development workflow. Built with TypeScript and [Ink](https://github.com/vadimdemedes/ink) (React for CLI), it provides an interactive REPL where you can write code, execute commands, search files, and manage tasks — all through natural language conversation.
-
-Think of it as your AI pair programmer that lives in the terminal.
 
 ## ✨ Features
 

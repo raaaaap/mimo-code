@@ -1,20 +1,34 @@
-<div align="center">
+<p align="center">
+  <img src="docs/logo.svg" alt="Mimo Code" width="640"/>
+</p>
 
-# 🐱 Mimo Code
+<p align="center">
+  <a href="./README.md">English</a>
+  &nbsp;·&nbsp;
+  <a href="./README_zh-CN.md">简体中文</a>
+  &nbsp;·&nbsp;
+  <strong>日本語</strong>
+</p>
 
-**MiMo 大規模言語モデルによる CLI コーディングアシスタント**
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square&color=3b82f6&labelColor=161b22" alt="License: MIT"/></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-≥18-green.svg?style=flat-square&color=3fb950&labelColor=161b22&logo=nodedotjs&logoColor=white" alt="Node.js"/></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.5-blue.svg?style=flat-square&color=3178c6&labelColor=161b22&logo=typescript&logoColor=white" alt="TypeScript"/></a>
+  <a href="https://github.com/raaaaap/mimo-code/stargazers"><img src="https://img.shields.io/github/stars/raaaaap/mimo-code.svg?style=flat-square&color=dbab09&labelColor=161b22&logo=github&logoColor=white" alt="GitHub stars"/></a>
+</p>
 
-[English](README.md) | [简体中文](README_zh-CN.md) | **日本語**
+<br/>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-≥18-green.svg)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
+<h3 align="center">MiMo 大規模言語モデルによる CLI コーディングアシスタント</h3>
+<p align="center">TypeScript と Ink で構築 — ターミナルに住む AI ペアプログラマー。</p>
 
-[機能](#-機能) · [クイックスタート](#-クイックスタート) · [使い方](#-使い方) · [アーキテクチャ](#-アーキテクチャ) · [設定](#-設定) · [コントリビューション](#-コントリビューション)
+<br/>
 
-</div>
+<p align="center">
+  <img src="docs/assets/hero-terminal.svg" alt="Mimo Code — 対話型 REPL、小米猫マスコット、ツール実行、コード生成" width="860"/>
+</p>
 
----
+<br/>
 
 ## 概要
 
