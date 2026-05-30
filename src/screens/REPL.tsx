@@ -230,45 +230,36 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       {/* Messages */}
       <MessageList messages={messages} />
 
-      {/* Execution status — above input so always visible */}
-      {isProcessing && (
-        <Box flexDirection="column" marginTop={1}>
-          <StatusLine status={execStatus} toolName={activeToolName} language={language} />
-        </Box>
-      )}
+      {/* Execution status — always render box to prevent layout shift */}
+      <Box flexDirection="column" marginTop={1} minHeight={1}>
+        <StatusLine status={execStatus} toolName={activeToolName} language={language} />
+      </Box>
 
       {/* Input area */}
       <Box marginTop={1} borderStyle="round" borderColor={theme.colors.primary} paddingX={1}>
         <PromptInput onSubmit={handleSubmit} isDisabled={isProcessing} onAbort={handleAbort} />
       </Box>
 
-      {/* Command hint / menu */}
-      {showCommands ? (
-        <Box flexDirection="column" marginTop={1} borderStyle="round" borderColor={theme.colors.muted} paddingX={1}>
-          <Text bold color={theme.colors.primary}>Available Commands:</Text>
-          {commandRegistry.current.getAll().map((cmd) => (
-            <Text key={cmd.name}>
-              <Text color={theme.colors.primary}>/{cmd.name}</Text>
-              {cmd.aliases && cmd.aliases.length > 0 && (
-                <Text color={theme.colors.muted}> ({cmd.aliases.join(', ')})</Text>
-              )}
-              <Text color={theme.colors.muted}> — {cmd.description}</Text>
-            </Text>
-          ))}
-          <Text color={theme.colors.muted} dimColor>{t(language, 'commands_hint')}</Text>
-        </Box>
-      ) : (
-        <Box marginTop={0}>
-          <Text color={theme.colors.muted} dimColor>{t(language, 'commands_hint')}</Text>
-        </Box>
-      )}
-
-      {/* Abort hint */}
-      {isProcessing && (
-        <Box marginTop={0}>
-          <Text color={theme.colors.muted} dimColor>{t(language, 'abort_hint')}</Text>
-        </Box>
-      )}
+      {/* Command hint — always render, toggle content inside */}
+      <Box marginTop={1} flexDirection="column" borderStyle={showCommands ? 'round' : undefined} borderColor={theme.colors.muted} paddingX={showCommands ? 1 : 0}>
+        {showCommands ? (
+          <>
+            <Text bold color={theme.colors.primary}>Available Commands:</Text>
+            {commandRegistry.current.getAll().map((cmd) => (
+              <Text key={cmd.name}>
+                <Text color={theme.colors.primary}>/{cmd.name}</Text>
+                {cmd.aliases && cmd.aliases.length > 0 && (
+                  <Text color={theme.colors.muted}> ({cmd.aliases.join(', ')})</Text>
+                )}
+                <Text color={theme.colors.muted}> — {cmd.description}</Text>
+              </Text>
+            ))}
+          </>
+        ) : null}
+        <Text color={theme.colors.muted} dimColor>
+          {isProcessing ? t(language, 'abort_hint') : t(language, 'commands_hint')}
+        </Text>
+      </Box>
     </Box>
   );
 }
