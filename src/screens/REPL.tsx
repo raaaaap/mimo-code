@@ -184,25 +184,22 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       </Box>
 
       {/* Command hint / menu */}
-      {showCommands ? (
-        <Box flexDirection="column" marginTop={1} borderStyle="round" borderColor={theme.colors.muted} paddingX={1}>
-          <Text bold color={theme.colors.primary}>Available Commands:</Text>
-          {commandRegistry.current.getAll().map((cmd) => (
-            <Text key={cmd.name}>
-              <Text color={theme.colors.primary}>/{cmd.name}</Text>
-              {cmd.aliases && cmd.aliases.length > 0 && (
-                <Text color={theme.colors.muted}> ({cmd.aliases.join(', ')})</Text>
-              )}
-              <Text color={theme.colors.muted}> — {cmd.description}</Text>
-            </Text>
-          ))}
-          <Text color={theme.colors.muted} dimColor>Press Tab to close</Text>
-        </Box>
-      ) : (
-        <Box marginTop={0}>
-          <Text color={theme.colors.muted} dimColor>Press Tab to see all commands</Text>
-        </Box>
-      )}
+      <Box flexDirection="column" marginTop={1} borderStyle="round" borderColor={theme.colors.muted} paddingX={1} isHidden={!showCommands}>
+        <Text bold color={theme.colors.primary}>Available Commands:</Text>
+        {commandRegistry.current.getAll().map((cmd) => (
+          <Text key={cmd.name}>
+            <Text color={theme.colors.primary}>/{cmd.name}</Text>
+            {cmd.aliases && cmd.aliases.length > 0 && (
+              <Text color={theme.colors.muted}> ({cmd.aliases.join(', ')})</Text>
+            )}
+            <Text color={theme.colors.muted}> — {cmd.description}</Text>
+          </Text>
+        ))}
+        <Text color={theme.colors.muted} dimColor>Press Tab to close</Text>
+      </Box>
+      <Box marginTop={0} isHidden={showCommands}>
+        <Text color={theme.colors.muted} dimColor>Press Tab to see all commands</Text>
+      </Box>
 
       {/* Processing indicator */}
       {isProcessing && (
