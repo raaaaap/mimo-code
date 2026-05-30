@@ -40,7 +40,7 @@ export function StatusLine({ status, toolName, toolSummary, language = 'zh-CN' }
   const theme = useTheme();
   const elapsed = useTimer(status !== 'idle');
 
-  if (status === 'idle') return <Text> </Text>;
+  if (status === 'idle') return null;
 
   return (
     <Box flexDirection="column">
