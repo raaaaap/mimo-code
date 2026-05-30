@@ -74,7 +74,7 @@ export function PromptInput({ onSubmit, isDisabled, onAbort }: PromptInputProps)
       return;
     }
 
-    if (key.length === 1 && !keyMeta.ctrl && !keyMeta.meta) {
+    if (key.length === 1 && !keyMeta.ctrl && !keyMeta.meta && key !== '\t') {
       setInput((prev) => prev + key);
     }
   });
