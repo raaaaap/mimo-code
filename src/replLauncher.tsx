@@ -11,22 +11,30 @@ interface REPLLaunchOptions extends CLIOptions {
 }
 
 export async function launchREPL(options: REPLLaunchOptions): Promise<void> {
-  const { waitUntilExit } = render(
-    <AppStateProvider
-      initialState={{
-        model: options.model,
-        apiEndpoint: options.apiEndpoint,
-        theme: options.theme,
-        verbose: options.verbose,
-        debug: options.debug,
-        permissionMode: options.permissionMode,
-        settings: options.settings,
-        settingsLoaded: true,
-      }}
-    >
-      <REPLScreen apiKey={options.apiKey} />
-    </AppStateProvider>,
-  );
+  // Enter alternate screen buffer to prevent rendering artifacts from scrollback
+  process.stdout.write('\x1B[?1049h\x1B[H');
 
-  await waitUntilExit();
+  try {
+    const { waitUntilExit } = render(
+      <AppStateProvider
+        initialState={{
+          model: options.model,
+          apiEndpoint: options.apiEndpoint,
+          theme: options.theme,
+          verbose: options.verbose,
+          debug: options.debug,
+          permissionMode: options.permissionMode,
+          settings: options.settings,
+          settingsLoaded: true,
+        }}
+      >
+        <REPLScreen apiKey={options.apiKey} />
+      </AppStateProvider>,
+    );
+
+    await waitUntilExit();
+  } finally {
+    // Leave alternate screen buffer, restoring original terminal content
+    process.stdout.write('\x1B[?1049l');
+  }
 }
