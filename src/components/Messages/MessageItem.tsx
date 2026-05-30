@@ -3,6 +3,70 @@ import { Text, Box } from 'ink';
 import type { Message } from '../../types/message.js';
 import { useTheme } from '../../utils/useTheme.js';
 
+/** Simple markdown renderer for terminal display */
+function renderMarkdown(text: string, theme: any): React.ReactNode[] {
+  const lines = text.split('\n');
+  const result: React.ReactNode[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Skip empty lines
+    if (line.trim() === '') {
+      result.push(React.createElement(Text, { key: `br-${i}` }, ''));
+      continue;
+    }
+
+    // Headers: ## text -> bold text
+    const headerMatch = line.match(/^(#{1,6})\s+(.+)$/);
+    if (headerMatch) {
+      result.push(
+        React.createElement(Text, { key: `h-${i}`, bold: true, color: theme.colors.primary }, headerMatch[2])
+      );
+      continue;
+    }
+
+    // Table rows: | col1 | col2 | -> formatted columns
+    if (line.trim().startsWith('|') && line.trim().endsWith('|')) {
+      // Skip separator lines like |---|---|
+      if (/^\|[\s-:|]+\|$/.test(line.trim())) continue;
+
+      const cells = line.split('|').filter(c => c.trim() !== '').map(c => c.trim());
+      const formatted = cells.map((cell, j) => {
+        // Bold text within cells
+        const parts = cell.split(/(\*\*[^*]+\*\*)/);
+        return parts.map((part, k) => {
+          if (part.startsWith('**') && part.endsWith('**')) {
+            return part.slice(2, -2);
+          }
+          return part;
+        }).join('');
+      });
+      result.push(
+        React.createElement(Text, { key: `tr-${i}`, color: theme.colors.foreground }, '  ' + formatted.join('  |  '))
+      );
+      continue;
+    }
+
+    // Regular line with inline formatting
+    const parts = line.split(/(\*\*[^*]+\*\*|`[^`]+`)/);
+    const inlineNodes = parts.map((part, j) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return React.createElement(Text, { key: `b-${j}`, bold: true }, part.slice(2, -2));
+      }
+      if (part.startsWith('`') && part.endsWith('`')) {
+        return React.createElement(Text, { key: `c-${j}`, color: theme.colors.accent }, part.slice(1, -1));
+      }
+      return part;
+    });
+    result.push(
+      React.createElement(Text, { key: `line-${i}`, color: theme.colors.foreground }, ...inlineNodes)
+    );
+  }
+
+  return result;
+}
+
 /** Strip tool call blocks (XML and JSON) from text content */
 function stripToolCallXml(text: string): string {
   return text
@@ -86,7 +150,7 @@ export function MessageItem({ message }: { message: Message }) {
       <Text bold color={color}>
         [{label}]
       </Text>
-      {displayContent && <Text>{displayContent}</Text>}
+      {displayContent && renderMarkdown(displayContent, theme)}
       {toolNames.length > 0 && (
         <Box marginTop={1} flexDirection="column">
           {toolNames.map((name, i) => (
