@@ -9,10 +9,8 @@ interface MimoModelConfig {
 }
 
 const MIMO_MODELS: Record<string, MimoModelConfig> = {
-  'mimo-v2.5':   { contextWindow: 128000, maxOutput: 8192 },
-  'mimo-large':  { contextWindow: 128000, maxOutput: 8192 },
-  'mimo-medium': { contextWindow: 32000,  maxOutput: 4096 },
-  'mimo-small':  { contextWindow: 8000,   maxOutput: 2048 },
+  'mimo-v2.5':      { contextWindow: 128000, maxOutput: 8192 },
+  'mimo-v2.5-pro':  { contextWindow: 256000, maxOutput: 16384 },
 };
 
 export class MimoAdapter extends OpenAIAdapter {
