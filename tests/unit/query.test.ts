@@ -71,4 +71,104 @@ describe('queryLoop', () => {
     }
     expect(results.length).toBeGreaterThanOrEqual(2);
   });
+
+  it('should parse formatted (multi-line) JSON tool calls from text', async () => {
+    const formattedJson = JSON.stringify(
+      { name: 'ReadFile', arguments: { path: '/tmp/hello.txt' } },
+      null,
+      2,
+    );
+    // Use a callModel that returns tool-call text first, then empty text to stop the loop
+    let callCount = 0;
+    const deps: QueryDeps = {
+      callModel: async function* () {
+        callCount++;
+        if (callCount === 1) {
+          yield { type: 'text', content: `I'll read the file.\n${formattedJson}` };
+          yield { type: 'done', finishReason: 'stop' };
+        } else {
+          yield { type: 'text', content: 'Done.' };
+          yield { type: 'done', finishReason: 'stop' };
+        }
+      },
+      microcompact: (msgs) => msgs,
+      autocompact: (msgs) => msgs,
+      uuid: () => 'test-uuid',
+      getTool: () => undefined,
+      toolContext: mockToolContext,
+    };
+    const results: Message[] = [];
+    for await (const msg of queryLoop([{ role: 'user', content: 'Read it' }], deps, { model: 'test' })) {
+      results.push(msg);
+    }
+    const assistantMsg = results.find(m => m.role === 'assistant');
+    expect(assistantMsg).toBeDefined();
+    expect(assistantMsg!.toolCalls).toBeDefined();
+    expect(assistantMsg!.toolCalls!.length).toBe(1);
+    expect(assistantMsg!.toolCalls![0].function.name).toBe('ReadFile');
+  });
+
+  it('should parse multiple tool calls from a single text response', async () => {
+    const call1 = JSON.stringify({ name: 'ReadFile', arguments: { path: '/a.txt' } });
+    const call2 = JSON.stringify({ name: 'ReadFile', arguments: { path: '/b.txt' } });
+    let callCount = 0;
+    const deps: QueryDeps = {
+      callModel: async function* () {
+        callCount++;
+        if (callCount === 1) {
+          yield { type: 'text', content: `Reading both files: ${call1} and ${call2}` };
+          yield { type: 'done', finishReason: 'stop' };
+        } else {
+          yield { type: 'text', content: 'Done.' };
+          yield { type: 'done', finishReason: 'stop' };
+        }
+      },
+      microcompact: (msgs) => msgs,
+      autocompact: (msgs) => msgs,
+      uuid: () => 'test-uuid',
+      getTool: () => undefined,
+      toolContext: mockToolContext,
+    };
+    const results: Message[] = [];
+    for await (const msg of queryLoop([{ role: 'user', content: 'Read them' }], deps, { model: 'test' })) {
+      results.push(msg);
+    }
+    const assistantMsg = results.find(m => m.role === 'assistant');
+    expect(assistantMsg).toBeDefined();
+    expect(assistantMsg!.toolCalls).toBeDefined();
+    expect(assistantMsg!.toolCalls!.length).toBe(2);
+    expect(assistantMsg!.toolCalls![0].function.name).toBe('ReadFile');
+    expect(assistantMsg!.toolCalls![1].function.name).toBe('ReadFile');
+  });
+
+  it('should parse {"tool": "Name", "input": {...}} format from text', async () => {
+    const altFormat = JSON.stringify({ tool: 'SearchWeb', input: { query: 'test search' } });
+    let callCount = 0;
+    const deps: QueryDeps = {
+      callModel: async function* () {
+        callCount++;
+        if (callCount === 1) {
+          yield { type: 'text', content: `Let me search: ${altFormat}` };
+          yield { type: 'done', finishReason: 'stop' };
+        } else {
+          yield { type: 'text', content: 'Done.' };
+          yield { type: 'done', finishReason: 'stop' };
+        }
+      },
+      microcompact: (msgs) => msgs,
+      autocompact: (msgs) => msgs,
+      uuid: () => 'test-uuid',
+      getTool: () => undefined,
+      toolContext: mockToolContext,
+    };
+    const results: Message[] = [];
+    for await (const msg of queryLoop([{ role: 'user', content: 'Search' }], deps, { model: 'test' })) {
+      results.push(msg);
+    }
+    const assistantMsg = results.find(m => m.role === 'assistant');
+    expect(assistantMsg).toBeDefined();
+    expect(assistantMsg!.toolCalls).toBeDefined();
+    expect(assistantMsg!.toolCalls!.length).toBe(1);
+    expect(assistantMsg!.toolCalls![0].function.name).toBe('SearchWeb');
+  });
 });

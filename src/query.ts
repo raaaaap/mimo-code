@@ -16,22 +16,52 @@ export interface QueryDeps {
 function parseToolCallsFromText(text: string, uuid: () => string): ToolCall[] {
   const results: ToolCall[] = [];
 
-  // Match JSON format: {"name": "ToolName", "arguments": {...}}
-  const jsonMatch = text.match(/\{\s*"name"\s*:\s*"([^"]+)"\s*,\s*"arguments"\s*:\s*(\{[\s\S]*?\})\s*\}/);
-  if (jsonMatch) {
-    try {
-      results.push({ id: uuid(), type: 'function', function: { name: jsonMatch[1], arguments: jsonMatch[2] } });
-      return results;
-    } catch { /* skip */ }
-  }
+  // Use bracket-balancing algorithm to find all JSON blocks
+  let depth = 0;
+  let start = -1;
 
-  // Match alternate JSON format: {"tool": "ToolName", "input": {...}}
-  const altMatch = text.match(/\{\s*"tool"\s*:\s*"([^"]+)"\s*,\s*"input"\s*:\s*(\{[\s\S]*?\})\s*\}/);
-  if (altMatch) {
-    try {
-      results.push({ id: uuid(), type: 'function', function: { name: altMatch[1], arguments: altMatch[2] } });
-      return results;
-    } catch { /* skip */ }
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === '{') {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (text[i] === '}') {
+      depth--;
+      if (depth === 0 && start !== -1) {
+        const jsonStr = text.slice(start, i + 1);
+        try {
+          const obj = JSON.parse(jsonStr);
+          // Format 1: {"name": "ToolName", "arguments": {...}}
+          if (obj.name && obj.arguments) {
+            results.push({
+              id: uuid(),
+              type: 'function',
+              function: {
+                name: obj.name,
+                arguments: typeof obj.arguments === 'string'
+                  ? obj.arguments
+                  : JSON.stringify(obj.arguments),
+              },
+            });
+          }
+          // Format 2: {"tool": "ToolName", "input": {...}}
+          else if (obj.tool && obj.input) {
+            results.push({
+              id: uuid(),
+              type: 'function',
+              function: {
+                name: obj.tool,
+                arguments: typeof obj.input === 'string'
+                  ? obj.input
+                  : JSON.stringify(obj.input),
+              },
+            });
+          }
+        } catch {
+          // Skip invalid JSON
+        }
+        start = -1;
+      }
+    }
   }
 
   return results;
