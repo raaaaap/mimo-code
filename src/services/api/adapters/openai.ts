@@ -112,7 +112,7 @@ export class OpenAIAdapter implements ModelAdapter {
 
   private async fetchWithRetry(body: unknown, abortSignal?: AbortSignal): Promise<Response> {
     return withRetry(async () => {
-      const signals: AbortSignal[] = [AbortSignal.timeout(120_000)];
+      const signals: AbortSignal[] = [AbortSignal.timeout(300_000)];
       if (abortSignal) signals.push(abortSignal);
       return fetch(`${this.endpoint}/chat/completions`, {
         method: 'POST',
