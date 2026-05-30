@@ -85,6 +85,7 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 git clone https://github.com/raaaaap/mimo-code.git
 cd mimo-code
 npm install
+npm link          # Register 'mimo' command globally
 ```
 
 ### Configure
@@ -112,15 +113,17 @@ Create `~/.mimo/settings.json`:
 ### Run
 
 ```bash
+# After npm link, use the 'mimo' command directly
+mimo
+
+# With options
+mimo --theme dracula --model mimo-large
+
 # Development mode (with hot reload)
 npm run dev
 
-# Build and run production
-npm run build
-node dist/entrypoints/cli.js
-
-# Or use the binary directly
-./bin/mimo.js
+# Or run without global link
+node bin/mimo.js --theme dracula
 ```
 
 ## 📖 Usage

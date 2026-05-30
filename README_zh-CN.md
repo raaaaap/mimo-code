@@ -86,6 +86,7 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 git clone https://github.com/raaaaap/mimo-code.git
 cd mimo-code
 npm install
+npm link          # 将 mimo 命令注册到全局
 ```
 
 ### 配置
@@ -113,15 +114,17 @@ export MIMO_API_KEY=your-api-key-here
 ### 运行
 
 ```bash
+# npm link 后直接使用 mimo 命令
+mimo
+
+# 带选项启动
+mimo --theme dracula --model mimo-large
+
 # 开发模式（热重载）
 npm run dev
 
-# 构建并运行生产版本
-npm run build
-node dist/entrypoints/cli.js
-
-# 或直接使用二进制文件
-./bin/mimo.js
+# 不使用全局链接直接运行
+node bin/mimo.js --theme dracula
 ```
 
 ## 📖 使用方法
