@@ -16,15 +16,39 @@ export interface QueryDeps {
 function parseToolCallsFromText(text: string, uuid: () => string): ToolCall[] {
   const results: ToolCall[] = [];
 
-  // Use bracket-balancing algorithm to find all JSON blocks
+  // Bracket-balancing algorithm that is aware of JSON string contents.
+  // Tracks whether the scanner is inside a quoted string so that braces
+  // within string values (e.g. code snippets) do not confuse the depth count.
   let depth = 0;
   let start = -1;
+  let inString = false;
+  let escape = false;
 
   for (let i = 0; i < text.length; i++) {
-    if (text[i] === '{') {
+    const ch = text[i];
+
+    if (escape) {
+      escape = false;
+      continue;
+    }
+
+    if (ch === '\\' && inString) {
+      escape = true;
+      continue;
+    }
+
+    if (ch === '"') {
+      inString = !inString;
+      continue;
+    }
+
+    // While inside a quoted string, ignore structural characters.
+    if (inString) continue;
+
+    if (ch === '{') {
       if (depth === 0) start = i;
       depth++;
-    } else if (text[i] === '}') {
+    } else if (ch === '}') {
       depth--;
       if (depth === 0 && start !== -1) {
         const jsonStr = text.slice(start, i + 1);
@@ -89,7 +113,7 @@ export async function* queryLoop(
       messages,
       system: systemPrompt,
       tools,
-      maxTokens: options.maxTokens ?? 4096,
+      maxTokens: options.maxTokens ?? 8192,
       temperature: options.temperature ?? 0.7,
       stream: true,
       abortSignal: options.abortSignal,
