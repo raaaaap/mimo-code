@@ -8,6 +8,7 @@ import type { ModelRequest, StreamChunk } from '../../types/api.js';
 export interface AgentToolDeps {
   getTool: (name: string) => Tool | undefined;
   callModel: (request: ModelRequest) => AsyncGenerator<StreamChunk>;
+  getToolDefinitions: () => ModelRequest['tools'];
 }
 
 const inputSchema = z.object({
@@ -56,6 +57,7 @@ export const AgentTool = (deps: AgentToolDeps) => buildTool({
           abortSignal: abortController.signal,
         },
         args.systemPrompt,
+        deps.getToolDefinitions(),
       )) {
         collected.push(msg);
       }

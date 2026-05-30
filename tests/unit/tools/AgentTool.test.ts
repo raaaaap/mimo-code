@@ -19,6 +19,7 @@ function makeCtx(): ToolUseContext {
 function makeTool(deps?: {
   callModel?: (req: unknown) => AsyncGenerator<StreamChunk>;
   getTool?: (name: string) => unknown;
+  getToolDefinitions?: () => unknown[];
 }) {
   return AgentTool({
     callModel: deps?.callModel ?? (async function* () {
@@ -26,6 +27,7 @@ function makeTool(deps?: {
       yield { type: 'done', finishReason: 'stop' };
     }),
     getTool: deps?.getTool ?? (() => undefined),
+    getToolDefinitions: deps?.getToolDefinitions ?? (() => []),
   });
 }
 
@@ -177,5 +179,28 @@ describe('AgentTool', () => {
     const result = await tool.call({ prompt: 'Run echo hi' }, makeCtx());
     expect(result.isError).toBeFalsy();
     expect(result.result).toBe('The command said hi.');
+  });
+
+  it('should pass tools to sub-agent queryLoop', async () => {
+    let receivedTools: unknown[] | undefined;
+
+    const tool = AgentTool({
+      callModel: async function* (req: any) {
+        receivedTools = req.tools;
+        yield { type: 'text', content: 'done' };
+        yield { type: 'done', finishReason: 'stop' };
+      },
+      getTool: () => undefined,
+      getToolDefinitions: () => [
+        { type: 'function', function: { name: 'FileWriteTool', description: 'Write files', parameters: {} } },
+        { type: 'function', function: { name: 'BashTool', description: 'Run commands', parameters: {} } },
+      ],
+    });
+
+    await tool.call({ prompt: 'test' }, makeCtx());
+
+    expect(receivedTools).toBeDefined();
+    expect(receivedTools).toHaveLength(2);
+    expect((receivedTools as any[])[0].function.name).toBe('FileWriteTool');
   });
 });

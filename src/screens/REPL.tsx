@@ -95,11 +95,15 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
     ];
     for (const cmd of cmds) commandRegistry.current.register(cmd);
   }, []);
-  const toolRegistry = useRef(createDefaultRegistry());
   const contextManager = useRef(new ContextManager({ maxTokens: 8000 }));
   const engineRef = useRef<QueryEngine | null>(null);
   if (!engineRef.current) {
     const client = new APIClient(apiEndpoint, apiKey);
+    const toolRegistry = createDefaultRegistry({
+      callModel: (req) => client.streamChat(req),
+      getTool: (name: string) => toolRegistry.get(name),
+      getToolDefinitions: () => toolRegistry.toToolDefinitions(),
+    });
     const toolContext: ToolUseContext = {
       options: { model },
       abortController: new AbortController(),
@@ -110,17 +114,17 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       getAppState: () => ({}),
       setAppState: () => {},
     };
-    const allTools = toolRegistry.current.getAll();
+    const allTools = toolRegistry.getAll();
     engineRef.current = new QueryEngine({
       callModel: (req) => client.streamChat(req),
       microcompact: (m) => contextManager.current.microcompact(m).messages,
       autocompact: async (m) => (await contextManager.current.autocompact(m)).messages,
       uuid: () => crypto.randomUUID(),
-      getTool: (name: string) => toolRegistry.current.get(name),
+      getTool: (name: string) => toolRegistry.get(name),
       toolContext,
       model,
       systemPrompt: getSystemPrompt(allTools, getSystemContext()),
-      tools: toolRegistry.current.toToolDefinitions(),
+      tools: toolRegistry.toToolDefinitions(),
     });
   }
 
