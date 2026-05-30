@@ -34,7 +34,6 @@
 
 Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融入开发工作流。基于 TypeScript 和 [Ink](https://github.com/vadimdemedes/ink)（React 终端框架）构建，提供交互式 REPL，你可以通过自然语言对话编写代码、执行命令、搜索文件和管理任务。
 
-可将其视作驻于终端的 AI 编程搭档。
 
 ## ✨ 功能特性
 
