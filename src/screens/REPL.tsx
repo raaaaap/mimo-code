@@ -52,12 +52,11 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
   const language = useAppState((s) => s.language);
 
   // Track execution state from message history
+  // Only update tool name and executing/thinking state — never reset to idle here
+  // (idle is only set when isProcessing becomes false in handleSubmit)
   useEffect(() => {
-    if (!isProcessing || messages.length === 0) {
-      setExecStatus('idle');
-      setActiveToolName(undefined);
-      return;
-    }
+    if (!isProcessing) return;
+    if (messages.length === 0) return;
 
     const lastMsg = messages[messages.length - 1];
 
@@ -183,6 +182,8 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
           }
         }
         store.setState({ messages: engine.getMessages(), isProcessing: false });
+        setExecStatus('idle');
+        setActiveToolName(undefined);
         setCatState('success');
         setTimeout(() => setCatState('idle'), 2000);
       } catch (err) {
@@ -202,6 +203,8 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
           messages: [...engine.getMessages(), errorMessage],
           isProcessing: false,
         });
+        setExecStatus('idle');
+        setActiveToolName(undefined);
         setCatState('error');
       }
     },
