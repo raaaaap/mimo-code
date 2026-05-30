@@ -134,6 +134,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       getAppState: () => ({}),
       setAppState: () => {},
     };
+    const allTools = toolRegistry.current.getAll();
     engineRef.current = new QueryEngine({
       callModel: (req) => client.streamChat(req),
       microcompact: (m) => contextManager.current.microcompact(m).messages,
@@ -142,7 +143,8 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       getTool: (name: string) => toolRegistry.current.get(name),
       toolContext,
       model,
-      systemPrompt: getSystemPrompt([], getSystemContext()),
+      systemPrompt: getSystemPrompt(allTools, getSystemContext()),
+      tools: toolRegistry.current.toToolDefinitions(),
     });
   }
 

@@ -1,3 +1,4 @@
+import { zodToJsonSchema } from 'zod-to-json-schema';
 import type { Tool, ToolDefinition } from './types/tool.js';
 import { FileReadTool } from './tools/FileReadTool/FileReadTool.js';
 import { FileWriteTool } from './tools/FileWriteTool/FileWriteTool.js';
@@ -36,14 +37,28 @@ export class ToolRegistry {
   }
 
   toToolDefinitions(): ToolDefinition[] {
-    return this.getAll().map(tool => ({
-      type: 'function' as const,
-      function: {
-        name: tool.name,
-        description: '',
-        parameters: {},
-      },
-    }));
+    return this.getAll().map(tool => {
+      let parameters: Record<string, unknown> = {};
+      try {
+        const jsonSchema = zodToJsonSchema(tool.inputSchema, { target: 'openApi3' });
+        // Extract just the properties part for OpenAI API
+        parameters = {
+          type: 'object',
+          properties: (jsonSchema as any).properties ?? {},
+          required: (jsonSchema as any).required ?? [],
+        };
+      } catch {
+        parameters = { type: 'object', properties: {} };
+      }
+      return {
+        type: 'function' as const,
+        function: {
+          name: tool.name,
+          description: tool.prompt() || tool.name,
+          parameters,
+        },
+      };
+    });
   }
 
   has(name: string): boolean {

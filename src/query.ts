@@ -65,7 +65,7 @@ export async function* queryLoop(
     messages = [...messages, assistantMessage];
     yield assistantMessage;
 
-    if (toolCalls.length === 0 || finishReason === 'stop') return;
+    if (toolCalls.length === 0) return;
 
     // Execute tools and add real results
     for (const tc of toolCalls) {
