@@ -1,13 +1,16 @@
 import React from 'react';
 import { Text, Box } from 'ink';
 import type { Message } from '../../types/message.js';
+import { useTheme } from '../../utils/useTheme.js';
 
 export function MessageItem({ message }: { message: Message }) {
+  const theme = useTheme();
+
   const roleColors: Record<string, string> = {
-    user: 'blue',
-    assistant: 'green',
-    tool: 'gray',
-    system: 'yellow',
+    user: theme.colors.accent,
+    assistant: theme.colors.success,
+    tool: theme.colors.muted,
+    system: theme.colors.warning,
   };
   const roleLabels: Record<string, string> = {
     user: 'You',
@@ -15,7 +18,7 @@ export function MessageItem({ message }: { message: Message }) {
     tool: 'Tool',
     system: 'System',
   };
-  const color = roleColors[message.role] ?? 'white';
+  const color = roleColors[message.role] ?? theme.colors.foreground;
   const label = roleLabels[message.role] ?? message.role;
   const content =
     typeof message.content === 'string'
@@ -30,7 +33,7 @@ export function MessageItem({ message }: { message: Message }) {
       <Text>{content}</Text>
       {message.toolCalls && message.toolCalls.length > 0 && (
         <Box marginTop={1}>
-          <Text color="gray">
+          <Text color={theme.colors.muted}>
             {message.toolCalls
               .map(
                 (tc) =>

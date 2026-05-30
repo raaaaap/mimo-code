@@ -24,6 +24,8 @@ import {
   mcpCommand, skillsCommand, tasksCommand,
 } from '../commands/index.js';
 import { CompanionSprite, type CatState } from '../buddy/CompanionSprite.js';
+import { useTheme } from '../utils/useTheme.js';
+import { THEME_CHANGE_PREFIX } from '../commands/theme.js';
 
 interface REPLScreenProps {
   apiKey: string;
@@ -36,6 +38,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
   const verbose = useAppState(selectVerbose);
   const store = useAppStateStore();
   const { exit } = useApp();
+  const theme = useTheme();
   const [catState, setCatState] = useState<CatState>('idle');
   const [showCommands, setShowCommands] = useState(false);
 
@@ -105,6 +108,13 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
           store.setState({ messages: [] });
           return;
         }
+        if (result && result.startsWith(THEME_CHANGE_PREFIX)) {
+          const themeName = result.slice(THEME_CHANGE_PREFIX.length);
+          store.setState({ theme: themeName });
+          const confirmMsg: Message = { role: 'assistant', content: `Theme switched to: ${themeName}` };
+          store.setState({ messages: [...store.getState().messages, confirmMsg] });
+          return;
+        }
         if (result) {
           const commandMessage: Message = { role: 'assistant', content: result };
           store.setState({ messages: [...store.getState().messages, commandMessage] });
@@ -151,16 +161,16 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
 
   return (
     <Box flexDirection="column" padding={1}>
-      {/* Xiaomi-inspired header */}
+      {/* Header */}
       <Box marginBottom={1}>
-        <Text color="#FF6900" bold>
+        <Text color={theme.colors.primary} bold>
           [MiMo]
         </Text>
-        <Text color="white"> MiMo Code v1.0.0</Text>
-        <Text color="gray"> [model: {model}]</Text>
+        <Text color={theme.colors.foreground}> MiMo Code v1.0.0</Text>
+        <Text color={theme.colors.muted}> [model: {model}]</Text>
       </Box>
 
-      {/* Xiaomi Cat mascot */}
+      {/* Cat mascot */}
       <Box marginBottom={1}>
         <CompanionSprite state={catState} />
       </Box>
@@ -169,36 +179,36 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       <MessageList messages={messages} />
 
       {/* Input area */}
-      <Box marginTop={1} borderStyle="round" borderColor="#FF6900" paddingX={1}>
+      <Box marginTop={1} borderStyle="round" borderColor={theme.colors.primary} paddingX={1}>
         <PromptInput onSubmit={handleSubmit} isDisabled={isProcessing} onAbort={handleAbort} />
       </Box>
 
       {/* Command hint / menu */}
       {showCommands ? (
-        <Box flexDirection="column" marginTop={1} borderStyle="round" borderColor="gray" paddingX={1}>
-          <Text bold color="#FF6900">Available Commands:</Text>
+        <Box flexDirection="column" marginTop={1} borderStyle="round" borderColor={theme.colors.muted} paddingX={1}>
+          <Text bold color={theme.colors.primary}>Available Commands:</Text>
           {commandRegistry.current.getAll().map((cmd) => (
             <Text key={cmd.name}>
-              <Text color="#FF6900">/{cmd.name}</Text>
+              <Text color={theme.colors.primary}>/{cmd.name}</Text>
               {cmd.aliases && cmd.aliases.length > 0 && (
-                <Text color="gray"> ({cmd.aliases.join(', ')})</Text>
+                <Text color={theme.colors.muted}> ({cmd.aliases.join(', ')})</Text>
               )}
-              <Text color="gray"> — {cmd.description}</Text>
+              <Text color={theme.colors.muted}> — {cmd.description}</Text>
             </Text>
           ))}
-          <Text color="gray" dimColor>Press Tab to close</Text>
+          <Text color={theme.colors.muted} dimColor>Press Tab to close</Text>
         </Box>
       ) : (
         <Box marginTop={0}>
-          <Text color="gray" dimColor>Press Tab to see all commands</Text>
+          <Text color={theme.colors.muted} dimColor>Press Tab to see all commands</Text>
         </Box>
       )}
 
       {/* Processing indicator */}
       {isProcessing && (
         <Box marginTop={1}>
-          <Text color="#FF6900">Processing... </Text>
-          <Text color="gray" dimColor>(Press Escape to abort)</Text>
+          <Text color={theme.colors.primary}>Processing... </Text>
+          <Text color={theme.colors.muted} dimColor>(Press Escape to abort)</Text>
         </Box>
       )}
     </Box>

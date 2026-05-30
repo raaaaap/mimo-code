@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, Box, useInput, useApp } from 'ink';
+import { useTheme } from '../../utils/useTheme.js';
 
 interface PromptInputProps {
   onSubmit: (input: string) => void;
@@ -12,6 +13,7 @@ export function PromptInput({ onSubmit, isDisabled, onAbort }: PromptInputProps)
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const { exit } = useApp();
+  const theme = useTheme();
 
   useInput((key, keyMeta) => {
     if (isDisabled) {
@@ -80,18 +82,18 @@ export function PromptInput({ onSubmit, isDisabled, onAbort }: PromptInputProps)
   return (
     <Box flexDirection="column">
       <Box>
-        <Text color="#FF6900" bold>
+        <Text color={theme.colors.primary} bold>
           {' > '}
         </Text>
         <Text>{input}</Text>
-        {!isDisabled && <Text color="gray">_</Text>}
+        {!isDisabled && <Text color={theme.colors.muted}>_</Text>}
       </Box>
       {!isDisabled ? (
-        <Text color="gray" dimColor>
+        <Text color={theme.colors.muted} dimColor>
           Enter to submit, Shift+Enter for newline
         </Text>
       ) : (
-        <Text color="gray" dimColor>
+        <Text color={theme.colors.muted} dimColor>
           Press Escape to abort
         </Text>
       )}

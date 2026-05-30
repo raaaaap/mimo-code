@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Text } from 'ink';
 import { renderSprite, renderFace } from './sprites.js';
+import { useTheme } from '../utils/useTheme.js';
 
 export type CatState = 'idle' | 'thinking' | 'coding' | 'success' | 'error';
 
@@ -28,7 +29,8 @@ export function CompanionSprite({ state, columns }: CompanionSpriteProps) {
   }, []);
 
   const cols = columns ?? process.stdout.columns ?? 80;
-  const color = '#FF6900';
+  const theme = useTheme();
+  const color = theme.colors.primary;
 
   // Narrow terminal: one-line face
   if (cols < MIN_COLS_FOR_FULL_SPRITE) {
