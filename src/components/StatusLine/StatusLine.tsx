@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Text, Box } from 'ink';
 import { useTheme } from '../../utils/useTheme.js';
 
@@ -10,18 +10,17 @@ interface StatusLineProps {
 
 function useTimer(isRunning: boolean): number {
   const [elapsed, setElapsed] = useState(0);
-  const [start, setStart] = useState<number | null>(null);
+  const startRef = useRef<number>(0);
 
   useEffect(() => {
     if (isRunning) {
-      setStart(Date.now());
+      startRef.current = Date.now();
       setElapsed(0);
       const interval = setInterval(() => {
-        setElapsed(Date.now() - (start ?? Date.now()));
+        setElapsed(Date.now() - startRef.current);
       }, 100);
       return () => clearInterval(interval);
     } else {
-      setStart(null);
       setElapsed(0);
       return undefined;
     }
@@ -56,7 +55,6 @@ export function StatusLine({ status, toolName, toolSummary }: StatusLineProps) {
           {toolName && (
             <Text color={theme.colors.foreground}>
               {'  '}{toolName}
-              {toolSummary && <Text color={theme.colors.muted}> — {toolSummary}</Text>}
             </Text>
           )}
         </Box>

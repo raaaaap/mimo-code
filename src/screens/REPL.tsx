@@ -3,7 +3,6 @@ import { Text, Box, useApp, useInput } from 'ink';
 import { MessageList } from '../components/Messages/MessageList.js';
 import { PromptInput } from '../components/PromptInput/PromptInput.js';
 import { StatusLine } from '../components/StatusLine/StatusLine.js';
-import { ToolProgress } from '../components/Progress/ToolProgress.js';
 import { useAppState, useAppStateStore } from '../state/AppState.js';
 import { selectMessages, selectModel, selectIsProcessing, selectVerbose } from '../state/selectors.js';
 import type { Message } from '../types/message.js';
@@ -45,8 +44,6 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
   const [showCommands, setShowCommands] = useState(false);
   const [execStatus, setExecStatus] = useState<'idle' | 'thinking' | 'executing'>('idle');
   const [activeToolName, setActiveToolName] = useState<string>();
-  const [activeToolSummary, setActiveToolSummary] = useState<string>();
-  const [completedTools, setCompletedTools] = useState<Array<{ name: string; status: 'done' | 'error'; summary?: string }>>([]);
 
   const apiEndpoint = useAppState((s) => s.apiEndpoint);
   const debug = useAppState((s) => s.debug);
@@ -56,41 +53,21 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
     if (!isProcessing || messages.length === 0) {
       setExecStatus('idle');
       setActiveToolName(undefined);
-      setActiveToolSummary(undefined);
-      setCompletedTools([]);
       return;
     }
 
     const lastMsg = messages[messages.length - 1];
 
-    // Tool results arrive after tool execution
+    // Tool results = tool finished, now thinking again
     if (lastMsg.role === 'tool') {
-      const toolCallId = (lastMsg as any).toolCallId;
-      const toolName = (lastMsg as any).toolName ?? 'Tool';
-      const resultPreview = typeof lastMsg.content === 'string'
-        ? lastMsg.content.slice(0, 60).replace(/\n/g, ' ')
-        : '';
-      setCompletedTools(prev => {
-        const exists = prev.some(t => t.summary === toolCallId);
-        if (exists) return prev;
-        return [...prev, { name: toolName, status: 'done' as const, summary: resultPreview }];
-      });
       setActiveToolName(undefined);
-      setActiveToolSummary(undefined);
       setExecStatus('thinking');
       return;
     }
 
     // Assistant message with tool calls = tools executing
     if (lastMsg.role === 'assistant' && lastMsg.toolCalls && lastMsg.toolCalls.length > 0) {
-      const tc = lastMsg.toolCalls[0];
-      setActiveToolName(tc.function.name);
-      try {
-        const args = JSON.parse(tc.function.arguments);
-        setActiveToolSummary(args.command ?? args.file_path ?? args.pattern ?? args.query ?? undefined);
-      } catch {
-        setActiveToolSummary(undefined);
-      }
+      setActiveToolName(lastMsg.toolCalls[0].function.name);
       setExecStatus('executing');
       return;
     }
@@ -98,7 +75,6 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
     // Otherwise LLM is thinking
     setExecStatus('thinking');
     setActiveToolName(undefined);
-    setActiveToolSummary(undefined);
   }, [messages, isProcessing]);
 
   // Toggle command menu with Tab
@@ -184,7 +160,6 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       store.setState({ isProcessing: true });
       setCatState('thinking');
       setExecStatus('thinking');
-      setCompletedTools([]);
 
       try {
         for await (const msg of engine.submitMessage(input)) {
@@ -267,8 +242,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       {/* Execution status */}
       {isProcessing && (
         <Box flexDirection="column" marginTop={1}>
-          <StatusLine status={execStatus} toolName={activeToolName} toolSummary={activeToolSummary} />
-          <ToolProgress activeTools={completedTools} />
+          <StatusLine status={execStatus} toolName={activeToolName} />
           <Box marginTop={0}>
             <Text color={theme.colors.muted} dimColor>Press Escape to abort</Text>
           </Box>
