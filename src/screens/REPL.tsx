@@ -27,6 +27,8 @@ import {
 import { CompanionSprite, type CatState } from '../buddy/CompanionSprite.js';
 import { useTheme } from '../utils/useTheme.js';
 import { THEME_CHANGE_PREFIX } from '../commands/theme.js';
+import { languageCommand, LANGUAGE_CHANGE_PREFIX } from '../commands/language.js';
+import { t } from '../utils/i18n.js';
 
 interface REPLScreenProps {
   apiKey: string;
@@ -47,6 +49,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
 
   const apiEndpoint = useAppState((s) => s.apiEndpoint);
   const debug = useAppState((s) => s.debug);
+  const language = useAppState((s) => s.language);
 
   // Track execution state from message history
   useEffect(() => {
@@ -91,7 +94,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       commitCommand, diffCommand, doctorCommand, modelCommand,
       themeCommand, usageCommand, statusCommand, permissionsCommand,
       planCommand, exportCommand, renameCommand, sessionCommand,
-      mcpCommand, skillsCommand, tasksCommand,
+      mcpCommand, skillsCommand, tasksCommand, languageCommand,
     ];
     for (const cmd of cmds) commandRegistry.current.register(cmd);
   }, []);
@@ -150,6 +153,13 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
           const themeName = result.slice(THEME_CHANGE_PREFIX.length);
           store.setState({ theme: themeName });
           const confirmMsg: Message = { role: 'assistant', content: `Theme switched to: ${themeName}` };
+          store.setState({ messages: [...store.getState().messages, confirmMsg] });
+          return;
+        }
+        if (result && result.startsWith(LANGUAGE_CHANGE_PREFIX)) {
+          const lang = result.slice(LANGUAGE_CHANGE_PREFIX.length);
+          store.setState({ language: lang as any });
+          const confirmMsg: Message = { role: 'assistant', content: `${t(lang as any, 'language_changed')} ${lang}` };
           store.setState({ messages: [...store.getState().messages, confirmMsg] });
           return;
         }
@@ -217,6 +227,13 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       {/* Messages */}
       <MessageList messages={messages} />
 
+      {/* Execution status — above input so always visible */}
+      {isProcessing && (
+        <Box flexDirection="column" marginTop={1}>
+          <StatusLine status={execStatus} toolName={activeToolName} language={language} />
+        </Box>
+      )}
+
       {/* Input area */}
       <Box marginTop={1} borderStyle="round" borderColor={theme.colors.primary} paddingX={1}>
         <PromptInput onSubmit={handleSubmit} isDisabled={isProcessing} onAbort={handleAbort} />
@@ -235,21 +252,18 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
               <Text color={theme.colors.muted}> — {cmd.description}</Text>
             </Text>
           ))}
-          <Text color={theme.colors.muted} dimColor>Press Tab to close</Text>
+          <Text color={theme.colors.muted} dimColor>{t(language, 'commands_hint')}</Text>
         </Box>
       ) : (
         <Box marginTop={0}>
-          <Text color={theme.colors.muted} dimColor>Press Tab to see all commands</Text>
+          <Text color={theme.colors.muted} dimColor>{t(language, 'commands_hint')}</Text>
         </Box>
       )}
 
-      {/* Execution status */}
+      {/* Abort hint */}
       {isProcessing && (
-        <Box flexDirection="column" marginTop={1}>
-          <StatusLine status={execStatus} toolName={activeToolName} />
-          <Box marginTop={0}>
-            <Text color={theme.colors.muted} dimColor>Press Escape to abort</Text>
-          </Box>
+        <Box marginTop={0}>
+          <Text color={theme.colors.muted} dimColor>{t(language, 'abort_hint')}</Text>
         </Box>
       )}
     </Box>

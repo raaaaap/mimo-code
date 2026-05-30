@@ -1,5 +1,6 @@
 import type { Message, TokenUsage } from '../types/message.js';
 import type { SettingsJson } from '../types/config.js';
+import type { Language } from '../utils/i18n.js';
 
 export interface AppState {
   messages: Message[];
@@ -11,6 +12,7 @@ export interface AppState {
   settings: SettingsJson;
   settingsLoaded: boolean;
   theme: string;
+  language: Language;
   verbose: boolean;
   debug: boolean;
   permissionMode: string;
@@ -29,6 +31,7 @@ export const INITIAL_APP_STATE: AppState = {
   settings: {},
   settingsLoaded: false,
   theme: 'mimo-dark',
+  language: 'zh-CN',
   verbose: false,
   debug: false,
   permissionMode: 'default',
