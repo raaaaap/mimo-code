@@ -16,9 +16,17 @@ export const BashTool = () => buildTool({
   prompt: () => 'Run a shell command. Returns stdout and stderr.',
   call: async (args) => {
     return new Promise((resolve) => {
+      const isWindows = process.platform === 'win32';
+      const shell = isWindows ? 'powershell.exe' : 'bash';
+      const shellArgs = isWindows ? ['-Command', args.command] : ['-c', args.command];
+
       const parts: string[] = [];
       const errParts: string[] = [];
-      const proc = spawn('bash', ['-c', args.command], { cwd: process.cwd(), env: process.env, stdio: ['pipe', 'pipe', 'pipe'] });
+      const proc = spawn(shell, shellArgs, {
+        cwd: process.cwd(),
+        env: process.env,
+        stdio: ['pipe', 'pipe', 'pipe'],
+      });
       const timeout = setTimeout(() => proc.kill('SIGTERM'), args.timeout ?? 120000);
       proc.stdout.on('data', (data: Buffer) => parts.push(data.toString()));
       proc.stderr.on('data', (data: Buffer) => errParts.push(data.toString()));

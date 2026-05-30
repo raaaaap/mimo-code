@@ -16,6 +16,13 @@ describe('BashTool', () => {
     const result = await tool.call({ command: 'exit 1' }, makeCtx());
     expect(result.isError).toBe(true);
   });
+  it('should use PowerShell on Windows', async () => {
+    const tool = BashTool();
+    // We're on Windows, so this should use PowerShell
+    const result = await tool.call({ command: 'Write-Output hello', timeout: 5000 }, makeCtx());
+    expect(result.isError).toBeFalsy();
+    expect(result.result).toContain('hello');
+  });
   it('should not be read-only', () => {
     const tool = BashTool();
     expect(tool.isReadOnly()).toBe(false);
