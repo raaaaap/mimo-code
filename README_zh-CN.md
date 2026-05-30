@@ -64,6 +64,8 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 ### 🎨 更多能力
 
 - **丰富的终端 UI** — 基于 React 的 REPL，支持语法高亮、差异对比和进度指示器
+- **Markdown 渲染** — 终端中渲染标题、粗体、表格和行内代码
+- **多语言界面** — 通过 `/language` 命令切换 简体中文、English、日本語
 - **小米猫吉祥物** — 动画 ASCII 伙伴，随智能体状态变化（空闲 → 思考 → 编码 → 成功/错误）
 - **权限系统** — 5 种模式：`default`、`acceptEdits`、`bypassPermissions`、`plan`、`auto`
 - **插件系统** — 事件驱动架构，支持 `EventBus` 和插件发现
@@ -177,7 +179,8 @@ cat main.ts | mimo --mode pipe "解释这个文件"
 | `/diff` | | 显示 git diff |
 | `/doctor` | | 运行诊断 |
 | `/model` | `/m` | 显示或切换模型 |
-| `/theme` | `/t` | 显示当前主题 |
+| `/theme` | `/t` | 显示或切换颜色主题 |
+| `/language` | `/lang`, `/locale` | 显示或切换界面语言（zh-CN, en, ja） |
 | `/usage` | | 显示 token 使用量 |
 | `/status` | | 显示会话状态 |
 | `/permissions` | `/perms`, `/perm` | 显示或设置权限模式 |

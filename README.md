@@ -63,6 +63,8 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 ### 🎨 Additional Capabilities
 
 - **Rich Terminal UI** — React-based REPL with syntax highlighting, diffs, and progress indicators
+- **Markdown Rendering** — Headers, bold text, tables, and inline code rendered in terminal
+- **Multi-language UI** — Switch between 简体中文, English, 日本語 via `/language` command
 - **Xiaomi Cat Mascot** — Animated ASCII companion that reacts to agent state (idle → thinking → coding → success/error)
 - **Permission System** — 5 modes: `default`, `acceptEdits`, `bypassPermissions`, `plan`, `auto`
 - **Plugin System** — Event-driven architecture with `EventBus` and plugin discovery
@@ -176,7 +178,8 @@ cat main.ts | mimo --mode pipe "Explain this file"
 | `/diff` | | Show git diff |
 | `/doctor` | | Run diagnostics |
 | `/model` | `/m` | Show or switch model |
-| `/theme` | `/t` | Show current theme |
+| `/theme` | `/t` | Show or switch color theme |
+| `/language` | `/lang`, `/locale` | Show or switch UI language (zh-CN, en, ja) |
 | `/usage` | | Show token usage |
 | `/status` | | Show session status |
 | `/permissions` | `/perms`, `/perm` | Show or set permission mode |
@@ -300,7 +303,7 @@ npm run typecheck
 npm run lint
 ```
 
-The project includes **61 test files** covering:
+The project includes **62 test files** covering:
 - Unit tests for all 13 tools
 - API adapter tests (OpenAI, Anthropic, MiMo)
 - Query engine and conversation flow tests
