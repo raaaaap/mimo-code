@@ -12,6 +12,31 @@ export interface QueryDeps {
   toolContext: ToolUseContext;
 }
 
+/** Parse tool calls from text content when the API doesn't support structured tool_calls */
+function parseToolCallsFromText(text: string, uuid: () => string): ToolCall[] {
+  const results: ToolCall[] = [];
+
+  // Match JSON format: {"name": "ToolName", "arguments": {...}}
+  const jsonMatch = text.match(/\{\s*"name"\s*:\s*"([^"]+)"\s*,\s*"arguments"\s*:\s*(\{[\s\S]*?\})\s*\}/);
+  if (jsonMatch) {
+    try {
+      results.push({ id: uuid(), type: 'function', function: { name: jsonMatch[1], arguments: jsonMatch[2] } });
+      return results;
+    } catch { /* skip */ }
+  }
+
+  // Match alternate JSON format: {"tool": "ToolName", "input": {...}}
+  const altMatch = text.match(/\{\s*"tool"\s*:\s*"([^"]+)"\s*,\s*"input"\s*:\s*(\{[\s\S]*?\})\s*\}/);
+  if (altMatch) {
+    try {
+      results.push({ id: uuid(), type: 'function', function: { name: altMatch[1], arguments: altMatch[2] } });
+      return results;
+    } catch { /* skip */ }
+  }
+
+  return results;
+}
+
 export async function* queryLoop(
   messages: Message[],
   deps: QueryDeps,
@@ -57,9 +82,19 @@ export async function* queryLoop(
       }
     }
 
+    const fullContent = contentParts.join('');
+
+    // If no structured tool calls from API, try to parse from text content
+    if (toolCalls.length === 0 && fullContent) {
+      const parsed = parseToolCallsFromText(fullContent, deps.uuid);
+      if (parsed.length > 0) {
+        toolCalls.push(...parsed);
+      }
+    }
+
     const assistantMessage: Message = {
       role: 'assistant',
-      content: contentParts.join(''),
+      content: fullContent,
       toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
     };
     messages = [...messages, assistantMessage];

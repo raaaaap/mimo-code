@@ -3,26 +3,35 @@ import { Text, Box } from 'ink';
 import type { Message } from '../../types/message.js';
 import { useTheme } from '../../utils/useTheme.js';
 
-/** Strip tool_call XML blocks from text content */
+/** Strip tool call blocks (XML and JSON) from text content */
 function stripToolCallXml(text: string): string {
   return text
     .replace(/<tool_call>[\s\S]*?<\/tool_call>/g, '')
+    .replace(/\{"name"\s*:\s*"[^"]+"\s*,\s*"arguments"\s*:\s*\{[\s\S]*?\}\s*\}/g, '')
+    .replace(/\{"tool"\s*:\s*"[^"]+"\s*,\s*"input"\s*:\s*\{[\s\S]*?\}\s*\}/g, '')
     .replace(/<function_calls>[\s\S]*?<\/antml:invoke>[\s\S]*?<\/antml:function_calls>/g, '')
     .replace(/<parameter=[^>]*>[\s\S]*?<\/parameter>/g, '')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
 
-/** Parse tool call names from XML blocks in text content */
+/** Parse tool call names from text content (XML and JSON formats) */
 function parseToolCallNames(text: string): string[] {
   const names: string[] = [];
-  const tcRegex = /<tool_call>\s*<function=(\w+)>/g;
+  // XML format
+  const xmlRegex = /<tool_call>\s*<function=(\w+)>/g;
   let match;
-  while ((match = tcRegex.exec(text)) !== null) {
+  while ((match = xmlRegex.exec(text)) !== null) {
     names.push(match[1]);
   }
-  const jsonTcRegex = /<tool_call>\s*\{[\s\S]*?"name"\s*:\s*"([^"]+)"/g;
-  while ((match = jsonTcRegex.exec(text)) !== null) {
+  // JSON format with "name" key
+  const jsonRegex = /\{"name"\s*:\s*"([^"]+)"\s*,\s*"arguments"\s*:/g;
+  while ((match = jsonRegex.exec(text)) !== null) {
+    names.push(match[1]);
+  }
+  // JSON format with "tool" key
+  const altRegex = /\{"tool"\s*:\s*"([^"]+)"\s*,\s*"input"\s*:/g;
+  while ((match = altRegex.exec(text)) !== null) {
     names.push(match[1]);
   }
   return names;
@@ -57,17 +66,17 @@ export function MessageItem({ message }: { message: Message }) {
     return null;
   }
 
-  // For assistant messages, strip tool_call XML from display text
+  // For assistant messages, strip tool call blocks from display text
   const displayContent = message.role === 'assistant' ? stripToolCallXml(rawContent) : rawContent;
 
-  // Collect tool names from both structured toolCalls and parsed XML
+  // Collect tool names from both structured toolCalls and parsed text
   const toolNames: string[] = [];
   if (message.toolCalls) {
     for (const tc of message.toolCalls) {
       toolNames.push(tc.function.name);
     }
   }
-  // Also parse XML tool calls from text if no structured ones
+  // Also parse tool calls from text if no structured ones
   if (toolNames.length === 0 && message.role === 'assistant') {
     toolNames.push(...parseToolCallNames(rawContent));
   }
@@ -82,7 +91,7 @@ export function MessageItem({ message }: { message: Message }) {
         <Box marginTop={1} flexDirection="column">
           {toolNames.map((name, i) => (
             <Text key={i} color={theme.colors.accent}>
-              {'  ⚡ '}{name}
+              {'  '}{name}
             </Text>
           ))}
         </Box>
