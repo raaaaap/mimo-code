@@ -3,6 +3,35 @@ import { Text, Box } from 'ink';
 import type { Message } from '../../types/message.js';
 import { useTheme } from '../../utils/useTheme.js';
 
+function summarizeToolCall(name: string, args: string): string {
+  try {
+    const parsed = JSON.parse(args);
+    switch (name) {
+      case 'BashTool':
+      case 'PowerShellTool':
+        return parsed.command ?? args.slice(0, 80);
+      case 'FileReadTool':
+        return parsed.file_path ?? args.slice(0, 80);
+      case 'FileWriteTool':
+        return parsed.file_path ?? args.slice(0, 80);
+      case 'FileEditTool':
+        return parsed.file_path ?? args.slice(0, 80);
+      case 'GlobTool':
+        return parsed.pattern ?? args.slice(0, 80);
+      case 'GrepTool':
+        return parsed.pattern ?? args.slice(0, 80);
+      case 'WebFetchTool':
+        return parsed.url ?? args.slice(0, 80);
+      case 'WebSearchTool':
+        return parsed.query ?? args.slice(0, 80);
+      default:
+        return args.slice(0, 80);
+    }
+  } catch {
+    return args.slice(0, 80);
+  }
+}
+
 export function MessageItem({ message }: { message: Message }) {
   const theme = useTheme();
 
@@ -32,15 +61,13 @@ export function MessageItem({ message }: { message: Message }) {
       </Text>
       <Text>{content}</Text>
       {message.toolCalls && message.toolCalls.length > 0 && (
-        <Box marginTop={1}>
-          <Text color={theme.colors.muted}>
-            {message.toolCalls
-              .map(
-                (tc) =>
-                  `  -> ${tc.function.name}(${tc.function.arguments.slice(0, 80)}${tc.function.arguments.length > 80 ? '...' : ''})`,
-              )
-              .join('\n')}
-          </Text>
+        <Box marginTop={1} flexDirection="column">
+          {message.toolCalls.map((tc, i) => (
+            <Text key={i} color={theme.colors.muted}>
+              {'  → '}{tc.function.name}
+              <Text color={theme.colors.foreground}> — {summarizeToolCall(tc.function.name, tc.function.arguments)}</Text>
+            </Text>
+          ))}
         </Box>
       )}
     </Box>
