@@ -56,7 +56,7 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 
 ### 🔌 Multi-Provider API Support
 
-- **MiMo** — Native support with automatic context compression (128k/32k/8k context windows)
+- **MiMo** — Native support with 1M context window and automatic compression. Models: `mimo-v2.5-pro` (1T params, $1-2/M input), `mimo-v2.5` ($0.40-0.80/M input)
 - **OpenAI** — Full OpenAI-compatible API with streaming SSE
 - **Anthropic** — Direct Claude API integration
 

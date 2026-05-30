@@ -57,7 +57,7 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 
 ### 🔌 多供应商 API 支持
 
-- **MiMo** — 原生支持，自动上下文压缩（128k/32k/8k 上下文窗口）
+- **MiMo** — 原生支持 1M 上下文窗口，自动压缩。模型：`mimo-v2.5-pro`（1T 参数，$1-2/M 输入），`mimo-v2.5`（$0.40-0.80/M 输入）
 - **OpenAI** — 完整的 OpenAI 兼容 API，支持流式 SSE
 - **Anthropic** — 直接集成 Claude API
 
