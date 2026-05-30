@@ -75,21 +75,6 @@ export const THEMES: Record<string, Theme> = {
       accent: '#81a1c1',
     },
   },
-  'catppuccin': {
-    name: 'catppuccin',
-    type: 'dark',
-    colors: {
-      background: '#1e1e2e',
-      foreground: '#cdd6f4',
-      primary: '#cba6f7',
-      secondary: '#f5c2e7',
-      success: '#a6e3a1',
-      warning: '#f9e2af',
-      error: '#f38ba8',
-      muted: '#585b70',
-      accent: '#89b4fa',
-    },
-  },
   'solarized-dark': {
     name: 'solarized-dark',
     type: 'dark',
