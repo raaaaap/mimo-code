@@ -19,7 +19,7 @@ export interface ContextManagerConfig {
 const DEFAULT_CONFIG: ContextManagerConfig = {
   maxTokens: 8000,
   compactThreshold: 0.8,
-  maxToolOutputLength: 2000,
+  maxToolOutputLength: 5000,
   preserveRecent: 5,
   summarize: async (text) => `[Summary of ${text.length} chars]`,
 };
