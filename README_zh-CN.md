@@ -69,7 +69,7 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 - **插件系统** — 事件驱动架构，支持 `EventBus` 和插件发现
 - **MCP 客户端** — 通过 stdio 的 JSON-RPC 2.0 支持 Model Context Protocol
 - **斜杠命令** — 15+ 个命令，用于会话控制、模型切换和诊断
-- **主题系统** — 4 个内置主题：`mimo-dark`、`mimo-light`、`matrix`、`ocean`
+- **主题系统** — 5 个内置主题：`mimo-dark`、`mimo-light`、`dracula`、`nord`、`solarized-dark`
 - **多模式执行** — 交互式 REPL、单次提示和管道模式
 
 ## 🚀 快速开始
@@ -143,7 +143,7 @@ Options:
   --debug                      调试模式
   -o, --output <format>        输出格式：text, json, markdown
   --no-color                   禁用颜色
-  --theme <theme>              UI 主题：mimo-dark, mimo-light, matrix, ocean
+  --theme <theme>              UI 主题：mimo-dark, mimo-light, dracula, nord, solarized-dark
   --max-tokens <n>             最大 token 数（默认：4096）
   --temperature <n>            温度（默认：0.7）
   --permission-mode <mode>     权限模式：default, acceptEdits, bypassPermissions, plan, auto
@@ -229,7 +229,7 @@ src/
 ├── state/             # 自定义状态存储
 ├── utils/
 │   ├── settings/      # 分层配置 (用户 → 项目 → 本地 → 标志)
-│   └── themes.ts      # 4 个内置主题
+│   └── themes.ts      # 5 个内置主题
 ├── modes/             # single.ts, pipe.ts
 ├── hooks/             # 钩子注册
 ├── keybindings/       # 按键绑定解析器

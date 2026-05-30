@@ -68,7 +68,7 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 - **Plugin System** — Event-driven architecture with `EventBus` and plugin discovery
 - **MCP Client** — Model Context Protocol support via JSON-RPC 2.0 over stdio
 - **Slash Commands** — 15+ commands for session control, model switching, and diagnostics
-- **Theme System** — 4 built-in themes: `mimo-dark`, `mimo-light`, `matrix`, `ocean`
+- **Theme System** — 5 built-in themes: `mimo-dark`, `mimo-light`, `dracula`, `nord`, `solarized-dark`
 - **Multi-mode Execution** — Interactive REPL, single-shot prompts, and pipe mode
 
 ## 🚀 Quick Start
@@ -142,7 +142,7 @@ Options:
   --debug                      Debug mode
   -o, --output <format>        Output format: text, json, markdown
   --no-color                   Disable colors
-  --theme <theme>              UI theme: mimo-dark, mimo-light, matrix, ocean
+  --theme <theme>              UI theme: mimo-dark, mimo-light, dracula, nord, solarized-dark
   --max-tokens <n>             Max tokens (default: 4096)
   --temperature <n>            Temperature (default: 0.7)
   --permission-mode <mode>     Permission mode: default, acceptEdits, bypassPermissions, plan, auto
@@ -228,7 +228,7 @@ src/
 ├── state/             # Custom state store
 ├── utils/
 │   ├── settings/      # Layered config (user → project → local → flags)
-│   └── themes.ts      # 4 built-in themes
+│   └── themes.ts      # 5 built-in themes
 ├── modes/             # single.ts, pipe.ts
 ├── hooks/             # Hook registry
 ├── keybindings/       # Key binding parser
