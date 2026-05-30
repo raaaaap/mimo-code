@@ -20,7 +20,7 @@
 <br/>
 
 <h3 align="center">基于 MiMo 大语言模型的 CLI 编程助手</h3>
-<p align="center">使用 TypeScript 和 Ink 构建 — 住在终端里的 AI 结对程序员。</p>
+<p align="center">使用 TypeScript 和 Ink 构建 — 驻于终端的 AI 编程搭档。</p>
 
 <br/>
 
@@ -32,9 +32,9 @@
 
 ## 概述
 
-Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的强大能力带入你的开发工作流。基于 TypeScript 和 [Ink](https://github.com/vadimdemedes/ink)（React 终端框架）构建，提供交互式 REPL，你可以通过自然语言对话编写代码、执行命令、搜索文件和管理任务。
+Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融入开发工作流。基于 TypeScript 和 [Ink](https://github.com/vadimdemedes/ink)（React 终端框架）构建，提供交互式 REPL，你可以通过自然语言对话编写代码、执行命令、搜索文件和管理任务。
 
-把它想象成住在终端里的 AI 结对程序员。
+可将其视作驻于终端的 AI 编程搭档。
 
 ## ✨ 功能特性
 
@@ -65,7 +65,7 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的强大能
 ### 🎨 更多能力
 
 - **丰富的终端 UI** — 基于 React 的 REPL，支持语法高亮、差异对比和进度指示器
-- **小米猫吉祥物** — 动画 ASCII 伴侣，根据代理状态变化（空闲 → 思考 → 编码 → 成功/错误）
+- **小米猫吉祥物** — 动画 ASCII 伙伴，随智能体状态变化（空闲 → 思考 → 编码 → 成功/错误）
 - **权限系统** — 5 种模式：`default`、`acceptEdits`、`bypassPermissions`、`plan`、`auto`
 - **插件系统** — 事件驱动架构，支持 `EventBus` 和插件发现
 - **MCP 客户端** — 通过 stdio 的 JSON-RPC 2.0 支持 Model Context Protocol
@@ -306,7 +306,7 @@ npm run lint
 - 插件、权限和设置系统测试
 - 代理对话流程的集成测试
 
-## 🤝 贡指南
+## 🤝 贡献指南
 
 欢迎贡献！以下是入门步骤：
 
@@ -344,6 +344,6 @@ npm run dev
 
 <div align="center">
 
-**为 MiMo 生态系统用 ❤️ 构建**
+**为 MiMo 生态系统倾心打造 ❤️**
 
 </div>
