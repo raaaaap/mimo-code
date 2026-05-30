@@ -9,8 +9,8 @@ interface MimoModelConfig {
 }
 
 const MIMO_MODELS: Record<string, MimoModelConfig> = {
-  'mimo-v2.5':      { contextWindow: 128000, maxOutput: 8192 },
-  'mimo-v2.5-pro':  { contextWindow: 256000, maxOutput: 16384 },
+  'mimo-v2.5-pro':  { contextWindow: 1000000, maxOutput: 16384 },
+  'mimo-v2.5':      { contextWindow: 1000000, maxOutput: 8192 },
 };
 
 export class MimoAdapter extends OpenAIAdapter {
@@ -27,7 +27,7 @@ export class MimoAdapter extends OpenAIAdapter {
   }
 
   getContextWindow(model: string): number {
-    return MIMO_MODELS[model]?.contextWindow ?? 128000;
+    return MIMO_MODELS[model]?.contextWindow ?? 256000;
   }
 
   countTokens(messages: Message[]): number {
