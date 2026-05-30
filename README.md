@@ -102,7 +102,7 @@ Create `~/.mimo/settings.json`:
 
 ```json
 {
-  "model": "mimo-large",
+  "model": "mimo-v2.5",
   "apiKey": "your-api-key-here",
   "apiEndpoint": "https://api.mimo.ai/v1"
 }
@@ -117,7 +117,7 @@ Create `~/.mimo/settings.json`:
 mimo
 
 # With options
-mimo --theme dracula --model mimo-large
+mimo --theme dracula --model mimo-v2.5
 
 # Development mode (with hot reload)
 npm run dev
@@ -134,7 +134,7 @@ node bin/mimo.js --theme dracula
 mimo [options] [prompt]
 
 Options:
-  -m, --model <model>          Model to use (default: "mimo-large")
+  -m, --model <model>          Model to use (default: "mimo-v2.5")
   -k, --api-key <key>          API key
   --api-endpoint <url>         API endpoint URL
   --mode <mode>                Mode: interactive, single, pipe (default: "interactive")

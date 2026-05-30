@@ -103,7 +103,7 @@ export MIMO_API_KEY=your-api-key-here
 
 ```json
 {
-  "model": "mimo-large",
+  "model": "mimo-v2.5",
   "apiKey": "your-api-key-here",
   "apiEndpoint": "https://api.mimo.ai/v1"
 }
@@ -118,7 +118,7 @@ export MIMO_API_KEY=your-api-key-here
 mimo
 
 # オプション付きで起動
-mimo --theme dracula --model mimo-large
+mimo --theme dracula --model mimo-v2.5
 
 # 開発モード（ホットリロード）
 npm run dev
@@ -135,7 +135,7 @@ node bin/mimo.js --theme dracula
 mimo [options] [prompt]
 
 Options:
-  -m, --model <model>          使用するモデル（デフォルト："mimo-large"）
+  -m, --model <model>          使用するモデル（デフォルト："mimo-v2.5"）
   -k, --api-key <key>          API キー
   --api-endpoint <url>         API エンドポイント URL
   --mode <mode>                モード：interactive, single, pipe（デフォルト："interactive"）

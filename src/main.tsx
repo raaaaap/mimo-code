@@ -38,7 +38,7 @@ async function interactiveSetup(): Promise<SettingsJson> {
   }
 
   const endpoint = await ask('请输入 API Base URL (默认: https://api.mimo.ai/v1): ') || 'https://api.mimo.ai/v1';
-  const model = await ask('请输入模型名称 (默认: mimo-large): ') || 'mimo-large';
+  const model = await ask('请输入模型名称 (默认: mimo-v2.5): ') || 'mimo-v2.5';
 
   const settings: SettingsJson = { apiKey, apiEndpoint: endpoint, model };
 
@@ -92,7 +92,7 @@ export async function run(): Promise<void> {
       const settings = await loadSettings(projectRoot, options);
 
       const cliOptions: CLIOptions = {
-        model: options.model ?? settings.model ?? 'mimo-large',
+        model: options.model ?? settings.model ?? 'mimo-v2.5',
         apiKey: options.apiKey,
         apiEndpoint: options.apiEndpoint,
         mode: (options.mode as CLIOptions['mode']) ?? 'interactive',

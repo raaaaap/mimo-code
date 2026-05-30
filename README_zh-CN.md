@@ -103,7 +103,7 @@ export MIMO_API_KEY=your-api-key-here
 
 ```json
 {
-  "model": "mimo-large",
+  "model": "mimo-v2.5",
   "apiKey": "your-api-key-here",
   "apiEndpoint": "https://api.mimo.ai/v1"
 }
@@ -118,7 +118,7 @@ export MIMO_API_KEY=your-api-key-here
 mimo
 
 # 带选项启动
-mimo --theme dracula --model mimo-large
+mimo --theme dracula --model mimo-v2.5
 
 # 开发模式（热重载）
 npm run dev
@@ -135,7 +135,7 @@ node bin/mimo.js --theme dracula
 mimo [options] [prompt]
 
 Options:
-  -m, --model <model>          使用的模型（默认："mimo-large"）
+  -m, --model <model>          使用的模型（默认："mimo-v2.5"）
   -k, --api-key <key>          API 密钥
   --api-endpoint <url>         API 端点 URL
   --mode <mode>                模式：interactive, single, pipe（默认："interactive"）

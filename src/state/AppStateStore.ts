@@ -23,7 +23,7 @@ export const INITIAL_APP_STATE: AppState = {
   messages: [],
   sessionId: '',
   isProcessing: false,
-  model: 'mimo-large',
+  model: 'mimo-v2.5',
   apiEndpoint: 'https://api.mimo.ai/v1',
   totalUsage: { inputTokens: 0, outputTokens: 0 },
   settings: {},
