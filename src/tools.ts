@@ -13,6 +13,9 @@ import { NotebookEditTool } from './tools/NotebookEditTool/NotebookEditTool.js';
 import { AskUserQuestionTool } from './tools/AskUserQuestionTool/AskUserQuestionTool.js';
 import { PowerShellTool } from './tools/PowerShellTool/PowerShellTool.js';
 import { AgentTool, type AgentToolDeps } from './tools/AgentTool/AgentTool.js';
+import { ToolSearchTool } from './tools/ToolSearchTool/ToolSearchTool.js';
+import { EnterPlanModeTool } from './tools/EnterPlanModeTool/EnterPlanModeTool.js';
+import { ExitPlanModeTool } from './tools/ExitPlanModeTool/ExitPlanModeTool.js';
 
 export class ToolRegistry {
   private tools = new Map<string, Tool>();
@@ -83,5 +86,8 @@ export function createDefaultRegistry(agentDeps?: AgentToolDeps): ToolRegistry {
   if (agentDeps) {
     registry.register(AgentTool(agentDeps));
   }
+  registry.register(ToolSearchTool(() => registry.getAll()));
+  registry.register(EnterPlanModeTool);
+  registry.register(ExitPlanModeTool);
   return registry;
 }

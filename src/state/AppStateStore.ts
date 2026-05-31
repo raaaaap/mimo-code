@@ -19,6 +19,9 @@ export interface AppState {
   companionReaction?: string;
   companionPetAt?: number;
   buddyEnabled: boolean;
+  planMode: boolean;
+  prePlanMode?: string;
+  tasks: Record<string, any>;
 }
 
 export const INITIAL_APP_STATE: AppState = {
@@ -36,4 +39,6 @@ export const INITIAL_APP_STATE: AppState = {
   debug: false,
   permissionMode: 'default',
   buddyEnabled: true,
+  planMode: false,
+  tasks: {},
 };
