@@ -146,7 +146,7 @@ Options:
   -o, --output <format>        出力形式：text, json, markdown
   --no-color                   カラー無効
   --theme <theme>              UI テーマ：mimo-dark, mimo-light, dracula, nord, solarized-dark
-  --max-tokens <n>             最大トークン数（デフォルト：4096）
+  --max-tokens <n>             最大トークン数（デフォルト：8192）
   --temperature <n>            温度（デフォルト：0.7）
   --permission-mode <mode>     パーミッションモード：default, acceptEdits, bypassPermissions, plan, auto
   -h, --help                   ヘルプを表示

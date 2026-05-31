@@ -41,7 +41,7 @@
     <text x="50" y="90" fill="#FF6900" font-family="'SF Mono','Fira Code','Cascadia Code',monospace" font-size="14" font-weight="bold">
       [MiMo]
       <tspan fill="#ffffff"> MiMo Code v1.0.0</tspan>
-      <tspan fill="#666688"> [model: mimo-large]</tspan>
+      <tspan fill="#666688"> [model: mimo-v2.5]</tspan>
     </text>
 
     <!-- Cat mascot -->

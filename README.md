@@ -145,7 +145,7 @@ Options:
   -o, --output <format>        Output format: text, json, markdown
   --no-color                   Disable colors
   --theme <theme>              UI theme: mimo-dark, mimo-light, dracula, nord, solarized-dark
-  --max-tokens <n>             Max tokens (default: 4096)
+  --max-tokens <n>             Max tokens (default: 8192)
   --temperature <n>            Temperature (default: 0.7)
   --permission-mode <mode>     Permission mode: default, acceptEdits, bypassPermissions, plan, auto
   -h, --help                   Display help

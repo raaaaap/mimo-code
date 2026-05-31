@@ -146,7 +146,7 @@ Options:
   -o, --output <format>        输出格式：text, json, markdown
   --no-color                   禁用颜色
   --theme <theme>              UI 主题：mimo-dark, mimo-light, dracula, nord, solarized-dark
-  --max-tokens <n>             最大 token 数（默认：4096）
+  --max-tokens <n>             最大 token 数（默认：8192）
   --temperature <n>            温度（默认：0.7）
   --permission-mode <mode>     权限模式：default, acceptEdits, bypassPermissions, plan, auto
   -h, --help                   显示帮助
