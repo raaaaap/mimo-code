@@ -27,6 +27,7 @@ import {
   copyCommand, envCommand, initCommand, keybindingsCommand,
   outputStyleCommand, feedbackCommand, sandboxCommand,
   memoryCommand, reviewCommand, historyCommand, addDirCommand,
+  createBuddyCommand,
   issueCommand, upgradeCommand,
   vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
 } from '../commands/index.js';
@@ -114,7 +115,13 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       issueCommand, upgradeCommand,
       vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
     ];
+    // Register buddy command with deps
+    const buddyCommand = createBuddyCommand({
+      getName: () => '小米猫',
+      isMuted: () => false,
+    });
     for (const cmd of cmds) commandRegistry.current.register(cmd);
+    commandRegistry.current.register(buddyCommand);
   }, []);
   const contextManager = useRef(new ContextManager({ maxTokens: 8000 }));
   const engineRef = useRef<QueryEngine | null>(null);

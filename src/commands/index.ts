@@ -35,3 +35,4 @@ export { loginCommand } from './login.js';
 export { logoutCommand } from './logout.js';
 export { branchCommand } from './branch.js';
 export { prCommentsCommand } from './prComments.js';
+export { createBuddyCommand } from './buddy.js';
