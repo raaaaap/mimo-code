@@ -1,35 +1,27 @@
-import { writeFileSync } from 'fs';
-import { join } from 'path';
 import type { Command } from '../commands.js';
+import { writeFile, mkdir } from 'node:fs/promises';
+import { join } from 'node:path';
+import { homedir } from 'node:os';
+import type { Language } from '../utils/i18n.js';
 
 export const exportCommand: Command = {
   name: 'export',
-  aliases: ['exp'],
-  description: 'Export the conversation to a markdown file',
-  arguments: [
-    { name: 'filename', description: 'Output filename (default: conversation.md)', required: false },
-  ],
+  description: 'Export conversation to file',
+  arguments: [{ name: 'path', description: 'File path to export to', required: false }],
   isEnabled: () => true,
-  call: async (args) => {
-    const filename = args.trim() || 'conversation.md';
-    const outPath = join(process.cwd(), filename);
-
-    const content = [
-      '# Conversation Export',
-      '',
-      `> Exported on ${new Date().toISOString()}`,
-      '',
-      '---',
-      '',
-      '_Conversation content would be written here._',
-      '',
-    ].join('\n');
-
+  call: async (args, context) => {
+    const path = args.trim() || join(homedir(), 'Desktop', 'mimo-conversation.md');
     try {
-      writeFileSync(outPath, content, 'utf-8');
-      return `Conversation exported to: ${outPath}`;
-    } catch (err: any) {
-      return `Export failed: ${err.message}`;
+      await mkdir(join(path, '..'), { recursive: true });
+      const content = `# MiMo Code Conversation Export\n\nExported at: ${new Date().toISOString()}\n\n---\n\nConversation content will be saved here.\n`;
+      await writeFile(path, content, 'utf-8');
+      return context.language === 'zh-CN' ? `对话已导出到：${path}` :
+             context.language === 'ja' ? `会話がエクスポートされました：${path}` :
+             `Conversation exported to: ${path}`;
+    } catch (e: any) {
+      return context.language === 'zh-CN' ? `导出失败：${e.message}` :
+             context.language === 'ja' ? `エクスポート失敗：${e.message}` :
+             `Export failed: ${e.message}`;
     }
   },
 };

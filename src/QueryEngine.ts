@@ -44,6 +44,17 @@ export class QueryEngine {
         if (msg.usage && (msg.usage.inputTokens > 0 || msg.usage.outputTokens > 0)) {
           this.totalUsage.inputTokens += msg.usage.inputTokens;
           this.totalUsage.outputTokens += msg.usage.outputTokens;
+        } else if (msg.role === 'assistant' && typeof msg.content === 'string' && msg.content.length > 0) {
+          // Fallback: estimate tokens when API doesn't return usage
+          // ~4 chars per token for English, ~2 chars per token for CJK
+          const outputChars = msg.content.length;
+          const estimatedOutput = Math.ceil(outputChars / 3);
+          // Estimate input from system prompt + all messages
+          const inputChars = (this.config.systemPrompt?.length ?? 0) +
+            this.mutableMessages.reduce((sum, m) => sum + (typeof m.content === 'string' ? m.content.length : 0), 0);
+          const estimatedInput = Math.ceil(inputChars / 3);
+          this.totalUsage.inputTokens += estimatedInput;
+          this.totalUsage.outputTokens += estimatedOutput;
         }
 
         yield msg;
