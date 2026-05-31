@@ -15,6 +15,7 @@ async function* streamGenerator(response: Response): AsyncGenerator<StreamChunk>
   const decoder = new TextDecoder();
   let buffer = '';
   const currentToolCalls: Map<number, ToolCall> = new Map();
+  let lastUsage: { inputTokens: number; outputTokens: number } | undefined;
 
   try {
     while (true) {
@@ -31,7 +32,12 @@ async function* streamGenerator(response: Response): AsyncGenerator<StreamChunk>
 
         const data = trimmed.slice(6);
         if (data === '[DONE]') {
-          yield { type: 'done' };
+          // Yield any remaining tool calls
+          for (const tc of currentToolCalls.values()) {
+            yield { type: 'tool_use', toolCall: tc };
+          }
+          currentToolCalls.clear();
+          yield { type: 'done', usage: lastUsage };
           return;
         }
 
@@ -61,6 +67,14 @@ async function* streamGenerator(response: Response): AsyncGenerator<StreamChunk>
             }
           }
 
+          // Capture usage from any chunk (some APIs send it with finish_reason, others separately)
+          if (parsed.usage) {
+            lastUsage = {
+              inputTokens: parsed.usage.prompt_tokens ?? 0,
+              outputTokens: parsed.usage.completion_tokens ?? 0,
+            };
+          }
+
           if (parsed.choices?.[0]?.finish_reason) {
             for (const tc of currentToolCalls.values()) {
               yield { type: 'tool_use', toolCall: tc };
@@ -69,10 +83,7 @@ async function* streamGenerator(response: Response): AsyncGenerator<StreamChunk>
             yield {
               type: 'done',
               finishReason: parsed.choices[0].finish_reason,
-              usage: parsed.usage ? {
-                inputTokens: parsed.usage.prompt_tokens ?? 0,
-                outputTokens: parsed.usage.completion_tokens ?? 0,
-              } : undefined,
+              usage: lastUsage,
             };
           }
         } catch {
