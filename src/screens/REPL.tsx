@@ -37,6 +37,7 @@ import { THEME_CHANGE_PREFIX } from '../commands/theme.js';
 import { languageCommand, LANGUAGE_CHANGE_PREFIX } from '../commands/language.js';
 import { t } from '../utils/i18n.js';
 import { trackCommandUsage, getTopCommands, getDefaultTopCommands } from '../utils/commandUsage.js';
+import { costTracker } from '../commands/cost.js';
 
 interface REPLScreenProps {
   apiKey: string;
@@ -120,6 +121,10 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
     const buddyCommand = createBuddyCommand({
       getName: () => '小米猫',
       isMuted: () => false,
+      onPet: () => {
+        setCatState('success');
+        setTimeout(() => setCatState('idle'), 2000);
+      },
     });
     for (const cmd of cmds) commandRegistry.current.register(cmd);
     commandRegistry.current.register(buddyCommand);
@@ -210,6 +215,11 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
           if (msg.role === 'assistant' && typeof msg.content === 'string' && !msg.content.startsWith('[')) {
             setCatState('coding');
           }
+        }
+        // Record cost after API call
+        const usage = engine.getUsage();
+        if (usage.inputTokens > 0 || usage.outputTokens > 0) {
+          costTracker.record(model, usage, usage.inputTokens);
         }
         store.setState({ messages: engine.getMessages(), isProcessing: false });
         setExecStatus('idle');
