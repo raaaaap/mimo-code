@@ -39,11 +39,23 @@ export class QueryEngine {
         this.config.tools,
       )) {
         this.mutableMessages.push(msg);
-        // Accumulate usage
-        if (msg.usage) {
+
+        // Accumulate usage from API response
+        if (msg.usage && (msg.usage.inputTokens > 0 || msg.usage.outputTokens > 0)) {
           this.totalUsage.inputTokens += msg.usage.inputTokens;
           this.totalUsage.outputTokens += msg.usage.outputTokens;
+        } else if (msg.role === 'assistant' && typeof msg.content === 'string') {
+          // Fallback: estimate tokens based on content length (~4 chars per token)
+          const estimatedOutput = Math.ceil(msg.content.length / 4);
+          // Estimate input from all messages in context
+          const inputChars = this.mutableMessages.reduce((sum, m) => {
+            return sum + (typeof m.content === 'string' ? m.content.length : 0);
+          }, 0);
+          const estimatedInput = Math.ceil(inputChars / 4);
+          this.totalUsage.inputTokens += estimatedInput;
+          this.totalUsage.outputTokens += estimatedOutput;
         }
+
         yield msg;
       }
     } finally {
