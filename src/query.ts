@@ -120,11 +120,13 @@ export async function* queryLoop(
     };
 
     const contentParts: string[] = [];
+    const thinkingParts: string[] = [];
     const toolCalls: ToolCall[] = [];
     let finishReason: string | undefined;
 
     for await (const chunk of deps.callModel(request)) {
       if (chunk.type === 'text' && chunk.content) contentParts.push(chunk.content);
+      if (chunk.type === 'thinking' && chunk.content) thinkingParts.push(chunk.content);
       if (chunk.type === 'tool_use' && chunk.toolCall) toolCalls.push(chunk.toolCall);
       if (chunk.type === 'done') {
         finishReason = chunk.finishReason;
@@ -137,6 +139,7 @@ export async function* queryLoop(
     }
 
     const fullContent = contentParts.join('');
+    const thinkingContent = thinkingParts.length > 0 ? thinkingParts.join('') : undefined;
 
     // If no structured tool calls from API, try to parse from text content
     if (toolCalls.length === 0 && fullContent) {
@@ -150,6 +153,7 @@ export async function* queryLoop(
       role: 'assistant',
       content: fullContent,
       toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+      thinking: thinkingContent,
     };
     messages = [...messages, assistantMessage];
     yield assistantMessage;

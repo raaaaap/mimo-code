@@ -21,6 +21,7 @@ export interface Message {
   toolCalls?: ToolCall[];
   toolCallId?: string;
   name?: string;
+  thinking?: string;
 }
 
 export interface TokenUsage {

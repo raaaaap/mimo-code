@@ -99,15 +99,30 @@ export class OpenAIAdapter implements ModelAdapter {
         });
       }
     }
-    return {
+
+    const isThinkingEnabled = request.thinking && request.thinking.type !== 'disabled';
+
+    const body: Record<string, unknown> = {
       model: request.model,
       messages,
       tools: request.tools,
       tool_choice: request.toolChoice,
       max_tokens: request.maxTokens ?? 4096,
-      temperature: request.temperature ?? 0.7,
       stream,
     };
+
+    // Only send temperature when thinking is disabled (many providers
+    // do not allow temperature with reasoning/thinking enabled)
+    if (!isThinkingEnabled) {
+      body.temperature = request.temperature ?? 0.7;
+    }
+
+    // Pass thinking parameter for providers that support it
+    if (request.thinking) {
+      body.thinking = request.thinking;
+    }
+
+    return body;
   }
 
   private async fetchWithRetry(body: unknown, abortSignal?: AbortSignal): Promise<Response> {

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, Box } from 'ink';
+import React, { useState } from 'react';
+import { Text, Box, useInput } from 'ink';
 import type { Message } from '../../types/message.js';
 import { useTheme } from '../../utils/useTheme.js';
 
@@ -101,6 +101,42 @@ function parseToolCallNames(text: string): string[] {
   return names;
 }
 
+function ThinkingBlock({ thinking, theme }: { thinking: string; theme: any }) {
+  const [expanded, setExpanded] = useState(false);
+
+  useInput((key, input) => {
+    if (input.return || key === ' ') {
+      setExpanded((prev) => !prev);
+    }
+  });
+
+  const lines = thinking.split('\n');
+  const preview = lines[0]?.slice(0, 80) ?? '';
+  const hasMore = lines.length > 1 || (lines[0]?.length ?? 0) > 80;
+
+  return (
+    <Box flexDirection="column" marginTop={1}>
+      <Text color={theme.colors.muted}>
+        {expanded ? '▼' : '▶'} 💭 推理过程:{' '}
+        {!expanded && (
+          <Text color={theme.colors.muted} dimColor>
+            {preview}{hasMore ? '...' : ''}
+          </Text>
+        )}
+      </Text>
+      {expanded && (
+        <Box flexDirection="column" paddingLeft={2} marginTop={0}>
+          {lines.map((line, i) => (
+            <Text key={i} color={theme.colors.muted} dimColor>
+              {line}
+            </Text>
+          ))}
+        </Box>
+      )}
+    </Box>
+  );
+}
+
 export function MessageItem({ message }: { message: Message }) {
   const theme = useTheme();
 
@@ -150,6 +186,7 @@ export function MessageItem({ message }: { message: Message }) {
       <Text bold color={color}>
         [{label}]
       </Text>
+      {message.thinking && <ThinkingBlock thinking={message.thinking} theme={theme} />}
       {displayContent && renderMarkdown(displayContent, theme)}
       {toolNames.length > 0 && (
         <Box marginTop={1} flexDirection="column">

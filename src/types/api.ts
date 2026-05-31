@@ -1,6 +1,11 @@
 import type { Message, ToolCall, TokenUsage } from './message.js';
 import type { ToolDefinition } from './tool.js';
 
+export type ThinkingConfig =
+  | { type: 'adaptive' }
+  | { type: 'enabled'; budgetTokens: number }
+  | { type: 'disabled' };
+
 export interface ModelRequest {
   model: string;
   messages: Message[];
@@ -12,6 +17,7 @@ export interface ModelRequest {
   stream?: boolean;
   abortSignal?: AbortSignal;
   metadata?: Record<string, unknown>;
+  thinking?: ThinkingConfig;
 }
 
 export interface StreamChunk {
