@@ -39,6 +39,8 @@ import { PLAN_MODE_PREFIX } from '../commands/plan.js';
 import { t } from '../utils/i18n.js';
 import { trackCommandUsage, getTopCommands, getDefaultTopCommands } from '../utils/commandUsage.js';
 import { costTracker } from '../commands/cost.js';
+import { SessionStore } from '../session/store.js';
+import { homedir } from 'node:os';
 
 interface REPLScreenProps {
   apiKey: string;
@@ -248,6 +250,24 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
         if (usage.inputTokens > 0 || usage.outputTokens > 0) {
           costTracker.record(model, usage, usage.inputTokens);
         }
+
+        // Save session to history
+        try {
+          const sessionStore = new SessionStore(homedir() + '/.mimo');
+          const messages = engine.getMessages();
+          if (messages.length > 0) {
+            await sessionStore.save({
+              id: `session-${Date.now()}`,
+              messages,
+              model,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            });
+          }
+        } catch {
+          // Ignore session save errors
+        }
+
         store.setState({ messages: engine.getMessages(), isProcessing: false });
         setExecStatus('idle');
         setActiveToolName(undefined);
