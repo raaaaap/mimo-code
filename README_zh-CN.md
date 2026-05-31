@@ -19,7 +19,7 @@
 
 <br/>
 
-<h3 align="center">基于 MiMo 大语言模型的 CLI 编程助手</h3>
+<h3 align="center">基于 MiMo 大语言模型的终端 AI 编程助手</h3>
 <p align="center">使用 TypeScript 和 Ink 构建 — 驻于终端的 AI 编程搭档。</p>
 
 <br/>
@@ -32,8 +32,7 @@
 
 ## 概述
 
-Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融入开发工作流。基于 TypeScript 和 [Ink](https://github.com/vadimdemedes/ink)（React 终端框架）构建，提供交互式 REPL，你可以通过自然语言对话编写代码、执行命令、搜索文件和管理任务。
-
+Mimo Code 是一款终端 AI 编程助手，由 MiMo 大语言模型驱动。基于 TypeScript 和 [Ink](https://github.com/vadimdemedes/ink)（React 终端框架）构建，提供交互式 REPL，你可以通过自然语言对话编写代码、执行命令、搜索文件和管理任务。
 
 ## ✨ 功能特性
 
@@ -67,12 +66,15 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 
 ### 🔌 多供应商 API 支持
 
-- **MiMo** — 原生支持 1M 上下文窗口，自动压缩。模型：`mimo-v2.5-pro`（1T 参数，$1-2/M 输入），`mimo-v2.5`（$0.40-0.80/M 输入）
-- **OpenAI** — 完整的 OpenAI 兼容 API，支持流式 SSE
-- **Anthropic** — 直接集成 Claude API
+| 供应商 | Base URL | API Key 格式 |
+|--------|----------|--------------|
+| **MiMo 按量付费** | `https://api.xiaomimimo.com/v1` | `sk-xxxxx` |
+| **MiMo Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `tp-xxxxx` |
+| **OpenAI** | 兼容任何 OpenAI API 端点 | `sk-xxxxx` |
 
 ### 🎨 更多能力
 
+- **本地化系统提示词** — LLM 使用你选择的语言回复（简体中文、English、日本語）
 - **丰富的终端 UI** — 基于 React 的 REPL，支持语法高亮、差异对比和进度指示器
 - **Markdown 渲染** — 终端中渲染标题、粗体、表格和行内代码
 - **推理模式** — 扩展推理，可折叠显示思考过程
@@ -81,11 +83,13 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 - **后台任务** — 长时间运行任务的输出获取和停止控制
 - **代理间通信** — 子代理之间的消息总线
 - **多语言界面** — 通过 `/language` 命令切换 简体中文、English、日本語
+- **会话持久化** — 对话自动保存到 `~/.mimo/sessions/`
+- **费用追踪** — 每次会话的 token 使用量和费用统计
+- **个性化命令** — TAB 显示你最常用的命令
 - **小米猫吉祥物** — 动画 ASCII 伙伴，随智能体状态变化（空闲 → 思考 → 编码 → 成功/错误）
 - **权限系统** — 5 种模式：`default`、`acceptEdits`、`bypassPermissions`、`plan`、`auto`
 - **插件系统** — 事件驱动架构，支持 `EventBus` 和插件发现
 - **MCP 客户端** — 通过 stdio 的 JSON-RPC 2.0 支持 Model Context Protocol
-- **斜杠命令** — 46 个命令，用于会话控制、模型切换、诊断等（TAB 显示你最常用的命令）
 - **主题系统** — 5 个内置主题：`mimo-dark`、`mimo-light`、`dracula`、`nord`、`solarized-dark`
 - **多模式执行** — 交互式 REPL、单次提示和管道模式
 
@@ -129,37 +133,30 @@ export MIMO_BASE_URL=https://api.xiaomimimo.com/v1
 
 **方式 C：交互式设置** — Mimo Code 首次运行时会提示你配置。
 
-### MiMo API 套餐
-
-| 套餐 | Base URL (OpenAI) | Base URL (Anthropic) | API Key 格式 |
-|------|-------------------|---------------------|--------------|
-| **按量付费** | `https://api.xiaomimimo.com/v1` | `https://api.xiaomimimo.com/anthropic` | `sk-xxxxx` |
-| **Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `https://token-plan-cn.xiaomimimo.com/anthropic` | `tp-xxxxx` |
-
 ### 运行
 
 ```bash
 # npm link 后直接使用 mimo 命令
 mimo
 
-# 带选项启动
+# 带选项运行
 mimo --theme dracula --model mimo-v2.5
 
 # 开发模式（热重载）
 npm run dev
 
-# 不使用全局链接直接运行
+# 或不使用全局链接运行
 node bin/mimo.js --theme dracula
 ```
 
-## 📖 使用方法
+## 📖 使用说明
 
 ### CLI 选项
 
 ```
-mimo [options] [prompt]
+mimo [选项] [提示]
 
-Options:
+选项：
   -m, --model <model>          使用的模型（默认："mimo-v2.5"）
   -k, --api-key <key>          API 密钥
   --base-url <url>             API Base URL
@@ -186,32 +183,59 @@ mimo
 mimo --mode single "解释 React hooks 的用法"
 
 # 管道模式（从 stdin 读取）
-echo "这段代码做了什么？" | mimo --mode pipe
+echo "这段代码是做什么的？" | mimo --mode pipe
 cat main.ts | mimo --mode pipe "解释这个文件"
 ```
 
-### 斜杠命令
+### 斜杠命令（46 个）
 
 | 命令 | 别名 | 描述 |
 |------|------|------|
-| `/help` | | 显示可用命令 |
+| `/help` | | 按分类显示所有命令 |
 | `/clear` | | 清屏 |
 | `/compact` | | 压缩对话历史 |
-| `/config` | | 显示当前配置 |
-| `/commit` | `/ci` | 暂存所有变更并提交 |
+| `/config` | | 显示或设置配置 |
+| `/commit` | `/ci` | 暂存所有更改并提交 |
+| `/context` | | 显示当前上下文窗口状态 |
+| `/cost` | | 显示本次会话费用明细 |
 | `/diff` | | 显示 git diff |
 | `/doctor` | | 运行诊断 |
+| `/effort` | | 调整推理努力程度 |
+| `/export` | | 导出对话到文件 |
+| `/fast` | | 切换快速模式 |
+| `/files` | | 列出会话中修改的文件 |
 | `/model` | `/m` | 显示或切换模型 |
 | `/theme` | `/t` | 显示或切换颜色主题 |
 | `/language` | `/lang`, `/locale` | 显示或切换界面语言（zh-CN, en, ja） |
-| `/usage` | | 显示 token 使用量 |
-| `/status` | | 显示会话状态 |
+| `/mcp` | | MCP 服务器管理 |
+| `/memory` | | 查看或编辑持久化记忆 |
 | `/permissions` | `/perms`, `/perm` | 显示或设置权限模式 |
 | `/plan` | | 进入计划模式 |
-| `/export` | | 导出对话 |
+| `/rename` | | 重命名当前会话 |
+| `/resume` | | 恢复之前的会话 |
+| `/review` | | 审查最近的更改 |
 | `/session` | | 会话管理 |
 | `/skills` | | 列出可用技能 |
+| `/stats` | | 显示会话统计 |
+| `/status` | | 显示会话状态 |
 | `/tasks` | | 任务管理 |
+| `/usage` | | 显示 token 使用量 |
+| `/vim` | | 切换 vim 键绑定模式 |
+| `/buddy` | | 小米猫吉祥物设置 |
+| `/branch` | | 显示或切换 git 分支 |
+| `/login` | | MiMo API 认证 |
+| `/logout` | | 清除认证 |
+| `/add-dir` | | 添加工作目录 |
+| `/copy` | | 复制最后回复到剪贴板 |
+| `/env` | | 显示相关环境变量 |
+| `/feedback` | | 发送反馈 |
+| `/init` | | 初始化项目配置 |
+| `/issue` | | 报告问题 |
+| `/keybindings` | | 显示或配置键绑定 |
+| `/output-style` | | 设置输出风格 |
+| `/pr_comments` | | 显示 PR 评论 |
+| `/sandbox-toggle` | | 切换沙箱模式 |
+| `/upgrade` | | 检查更新 |
 
 ### 键盘快捷键
 
@@ -222,47 +246,46 @@ cat main.ts | mimo --mode pipe "解释这个文件"
 | `Ctrl+C` | 取消 / 退出 |
 | `Ctrl+D` | 退出 |
 | `Up/Down` | 浏览历史 |
-| `Escape` | 清空输入 |
+| `Escape` | 清除输入 |
+| `Tab` | 切换命令菜单（显示你最常用的命令） |
 
 ## 🏗️ 架构
 
 ```
 src/
-├── entrypoints/       # CLI 入口点 (cli.tsx, init.ts, mcp.ts)
+├── entrypoints/       # CLI 入口（cli.tsx, init.ts, mcp.ts）
 ├── main.tsx           # Commander CLI 设置，模式分发
 ├── query.ts           # 核心代理循环（异步生成器）
 ├── QueryEngine.ts     # 对话生命周期管理器
-├── context.ts         # 系统上下文收集（git、cwd、日期）
-├── screens/           # REPL 界面 (React/Ink)
+├── context.ts         # 系统上下文收集（git, cwd, date）
+├── constants/         # 系统提示词（本地化）
+├── screens/           # REPL 屏幕（React/Ink）
 ├── components/        # UI 组件
-│   ├── Messages/      # 对话渲染
+│   ├── Messages/      # 对话渲染（支持 Markdown）
 │   ├── PromptInput/   # 用户输入处理
-│   ├── Mimo/          # 头像显示
+│   ├── StatusLine/    # 执行状态显示
 │   ├── StructuredDiff/# 差异可视化
 │   ├── HighlightedCode/# 语法高亮
-│   └── design-system/ # Button、Card、Table 基础组件
-├── tools/             # 13 个内置工具实现
+│   └── design-system/ # Button, Card, Table 基础组件
+├── tools/             # 23 个内置工具实现
+├── commands/          # 46 个斜杠命令（全部支持 i18n）
 ├── services/
-│   ├── api/           # API 客户端 + 适配器 (OpenAI, Anthropic, MiMo)
-│   ├── tools/         # 工具执行引擎与编排
+│   ├── api/           # API 客户端 + 适配器（OpenAI, MiMo）
+│   ├── tools/         # 工具执行引擎和编排
+│   ├── compact/       # 上下文压缩和 token 预算
 │   ├── permissions/   # 权限检查器（5 种模式）
-│   ├── mcp/           # MCP 客户端 (JSON-RPC 2.0 over stdio)
-│   └── lsp/           # LSP 客户端（未实现）
-├── plugins/           # EventBus + PluginManager + 加载器
-├── commands/          # 15+ 个斜杠命令
-├── skills/            # 技能系统 (remember, simplify)
-├── buddy/             # 小米猫吉祥物（动画 ASCII 艺术）
-├── state/             # 自定义状态存储
-├── utils/
-│   ├── settings/      # 分层配置 (用户 → 项目 → 本地 → 标志)
-│   └── themes.ts      # 5 个内置主题
-├── modes/             # single.ts, pipe.ts
-├── hooks/             # 钩子注册
-├── keybindings/       # 按键绑定解析器
-├── history/           # 对话历史存储
+│   └── mcp/           # MCP 客户端（JSON-RPC 2.0 over stdio）
+├── state/             # 应用状态管理（React context）
 ├── session/           # 会话持久化
-├── tasks/             # 任务管理器
-├── telemetry/         # 使用遥测
+├── utils/
+│   ├── settings/      # 分层配置（用户 → 项目 → 本地 → 标志）
+│   ├── i18n.ts        # 国际化（zh-CN, en, ja）
+│   ├── themes.ts      # 5 个内置主题
+│   └── commandUsage.ts # 命令使用追踪
+├── buddy/             # 小米猫吉祥物（动画 ASCII）
+├── plugins/           # EventBus + PluginManager + loader
+├── skills/            # 技能系统（remember, simplify）
+├── hooks/             # 钩子注册
 └── vim/               # Vim 模式状态
 ```
 
@@ -271,15 +294,15 @@ src/
 Mimo Code 的核心是**查询循环**（`query.ts`）：
 
 ```
-用户输入 → 系统提示 + 上下文 → API 请求（流式）
+用户输入 → 本地化系统提示词 + 上下文 → API 请求（流式）
     ↓
-文本块 → 显示在终端
+文本块 → 在终端显示（支持 Markdown 渲染）
 工具调用 → 通过 ToolRegistry 执行 → 追加结果 → 循环
     ↓
 （最多 20 轮或直到没有更多工具调用）
 ```
 
-工具智能编排：并发安全的工具（只读）并行执行，而破坏性工具按顺序执行并进行权限检查。
+工具智能编排：并发安全的工具（只读）并行运行，破坏性工具按顺序运行并进行权限检查。
 
 ## ⚙️ 配置
 
@@ -288,7 +311,7 @@ Mimo Code 的核心是**查询循环**（`query.ts`）：
 设置从四个来源合并（优先级从高到低）：
 
 1. **CLI 标志** — `--model`、`--api-key` 等
-2. **本地设置** — `.mimo/settings.local.json`（已 gitignore）
+2. **本地设置** — `.mimo/settings.local.json`（gitignore）
 3. **项目设置** — `.mimo/settings.json`
 4. **用户设置** — `~/.mimo/settings.json`
 
@@ -305,10 +328,10 @@ Mimo Code 的核心是**查询循环**（`query.ts`）：
 
 | 模式 | 描述 |
 |------|------|
-| `default` | 破坏性操作需请求权限 |
-| `acceptEdits` | 自动批准文件读/写/编辑 |
+| `default` | 对破坏性操作请求权限 |
+| `acceptEdits` | 自动批准文件读写编辑 |
 | `bypassPermissions` | 自动批准所有操作（谨慎使用） |
-| `plan` | 只读模式 — 无写入或执行 |
+| `plan` | 只读模式 — 禁止写入和执行 |
 | `auto` | 基于规则，回退到询问 |
 
 ## 🧪 测试
@@ -327,24 +350,24 @@ npm run typecheck
 npm run lint
 ```
 
-项目包含 **61 个测试文件**，覆盖：
-- 所有 13 个工具的单元测试
-- API 适配器测试 (OpenAI, Anthropic, MiMo)
+项目包含 **62 个测试文件**，**432 个测试**，覆盖：
+- 所有 23 个工具的单元测试
+- API 适配器测试（OpenAI, MiMo）
 - 查询引擎和对话流程测试
 - 插件、权限和设置系统测试
-- 代理对话流程的集成测试
+- 代理对话流程集成测试
 
-## 🤝 贡献指南
+## 🤝 贡献
 
-欢迎贡献！以下是入门步骤：
+欢迎贡献！以下是入门指南：
 
 1. **Fork** 仓库
 2. **创建** 功能分支：`git checkout -b feature/amazing-feature`
 3. **提交** 更改：`git commit -m 'feat: add amazing feature'`
 4. **推送** 到分支：`git push origin feature/amazing-feature`
-5. **发起** Pull Request
+5. **打开** Pull Request
 
-### 开发环境
+### 开发设置
 
 ```bash
 git clone https://github.com/raaaaap/mimo-code.git
@@ -355,7 +378,7 @@ npm run dev
 
 ### 提交规范
 
-本项目遵循 [Conventional Commits](https://www.conventionalcommits.org/) 规范：
+本项目遵循 [Conventional Commits](https://www.conventionalcommits.org/)：
 
 - `feat:` — 新功能
 - `fix:` — Bug 修复
@@ -372,6 +395,6 @@ npm run dev
 
 <div align="center">
 
-**为 MiMo 生态系统倾心打造 ❤️**
+**为 MiMo 生态系统用心构建 ❤️**
 
 </div>

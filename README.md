@@ -19,7 +19,7 @@
 
 <br/>
 
-<h3 align="center">A CLI coding agent powered by the MiMo large language model.</h3>
+<h3 align="center">A terminal AI coding agent powered by MiMo LLM</h3>
 <p align="center">Built with TypeScript and Ink — your AI pair programmer that lives in the terminal.</p>
 
 <br/>
@@ -32,7 +32,7 @@
 
 ## Overview
 
-Mimo Code is a terminal-based AI coding assistant that brings the power of the MiMo large language model to your development workflow. Built with TypeScript and [Ink](https://github.com/vadimdemedes/ink) (React for CLI), it provides an interactive REPL where you can write code, execute commands, search files, and manage tasks — all through natural language conversation.
+Mimo Code is a terminal-based AI coding assistant powered by the MiMo large language model. Built with TypeScript and [Ink](https://github.com/vadimdemedes/ink) (React for CLI), it provides an interactive REPL where you can write code, execute commands, search files, and manage tasks — all through natural language conversation.
 
 ## ✨ Features
 
@@ -66,12 +66,15 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 
 ### 🔌 Multi-Provider API Support
 
-- **MiMo** — Native support with 1M context window and automatic compression. Models: `mimo-v2.5-pro` (1T params, $1-2/M input), `mimo-v2.5` ($0.40-0.80/M input)
-- **OpenAI** — Full OpenAI-compatible API with streaming SSE
-- **Anthropic** — Direct Claude API integration
+| Provider | Base URL | Key Format |
+|----------|----------|------------|
+| **MiMo Pay-per-use** | `https://api.xiaomimimo.com/v1` | `sk-xxxxx` |
+| **MiMo Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `tp-xxxxx` |
+| **OpenAI** | Compatible with any OpenAI API endpoint | `sk-xxxxx` |
 
 ### 🎨 Additional Capabilities
 
+- **Localized System Prompt** — LLM responds in your selected language (zh-CN, en, ja)
 - **Rich Terminal UI** — React-based REPL with syntax highlighting, diffs, and progress indicators
 - **Markdown Rendering** — Headers, bold text, tables, and inline code rendered in terminal
 - **Thinking Mode** — Extended reasoning with collapsible thinking process display
@@ -80,11 +83,13 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 - **Background Tasks** — Task output retrieval and stop control for long-running operations
 - **Inter-Agent Messaging** — Message bus for communication between sub-agents
 - **Multi-language UI** — Switch between 简体中文, English, 日本語 via `/language` command
+- **Session Persistence** — Conversations saved to `~/.mimo/sessions/` automatically
+- **Cost Tracking** — Token usage and cost tracking per session
+- **Personalized Commands** — TAB shows your most frequently used commands
 - **Xiaomi Cat Mascot** — Animated ASCII companion that reacts to agent state (idle → thinking → coding → success/error)
 - **Permission System** — 5 modes: `default`, `acceptEdits`, `bypassPermissions`, `plan`, `auto`
 - **Plugin System** — Event-driven architecture with `EventBus` and plugin discovery
 - **MCP Client** — Model Context Protocol support via JSON-RPC 2.0 over stdio
-- **Slash Commands** — 46 commands for session control, model switching, diagnostics, and more (TAB shows your most used commands)
 - **Theme System** — 5 built-in themes: `mimo-dark`, `mimo-light`, `dracula`, `nord`, `solarized-dark`
 - **Multi-mode Execution** — Interactive REPL, single-shot prompts, and pipe mode
 
@@ -127,13 +132,6 @@ Create `~/.mimo/settings.json`:
 ```
 
 **Option C: Interactive setup** — Mimo Code will prompt you on first run.
-
-### MiMo API Plans
-
-| Plan | Base URL (OpenAI) | Base URL (Anthropic) | API Key Format |
-|------|-------------------|---------------------|----------------|
-| **Pay-per-use** | `https://api.xiaomimimo.com/v1` | `https://api.xiaomimimo.com/anthropic` | `sk-xxxxx` |
-| **Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `https://token-plan-cn.xiaomimimo.com/anthropic` | `tp-xxxxx` |
 
 ### Run
 
@@ -189,21 +187,21 @@ echo "What does this code do?" | mimo --mode pipe
 cat main.ts | mimo --mode pipe "Explain this file"
 ```
 
-### Slash Commands
+### Slash Commands (46)
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
-| `/help` | | Show available commands |
+| `/help` | | Show all commands by category |
 | `/clear` | | Clear the screen |
 | `/compact` | | Compact conversation history |
-| `/config` | | Show current configuration |
+| `/config` | | Show or set configuration |
 | `/commit` | `/ci` | Stage all changes and commit |
 | `/context` | | Show current context window status |
-| `/cost` | | Show cost breakdown |
+| `/cost` | | Show cost breakdown for this session |
 | `/diff` | | Show git diff |
 | `/doctor` | | Run diagnostics |
 | `/effort` | | Adjust reasoning effort level |
-| `/export` | | Export conversation |
+| `/export` | | Export conversation to file |
 | `/fast` | | Toggle fast mode |
 | `/files` | | List files modified in session |
 | `/model` | `/m` | Show or switch model |
@@ -213,7 +211,7 @@ cat main.ts | mimo --mode pipe "Explain this file"
 | `/memory` | | View or edit persistent memory |
 | `/permissions` | `/perms`, `/perm` | Show or set permission mode |
 | `/plan` | | Enter plan mode |
-| `/rename` | | Rename session |
+| `/rename` | | Rename current session |
 | `/resume` | | Resume previous session |
 | `/review` | | Review recent changes |
 | `/session` | | Session management |
@@ -227,6 +225,17 @@ cat main.ts | mimo --mode pipe "Explain this file"
 | `/branch` | | Show or switch git branches |
 | `/login` | | Authenticate with MiMo API |
 | `/logout` | | Clear authentication |
+| `/add-dir` | | Add a working directory |
+| `/copy` | | Copy last response to clipboard |
+| `/env` | | Show relevant environment variables |
+| `/feedback` | | Send feedback about MiMo Code |
+| `/init` | | Initialize project configuration |
+| `/issue` | | Report an issue |
+| `/keybindings` | | Show or configure keybindings |
+| `/output-style` | | Set output style |
+| `/pr_comments` | | Show PR comments |
+| `/sandbox-toggle` | | Toggle sandbox mode |
+| `/upgrade` | | Check for updates |
 
 ### Keyboard Shortcuts
 
@@ -238,6 +247,7 @@ cat main.ts | mimo --mode pipe "Explain this file"
 | `Ctrl+D` | Exit |
 | `Up/Down` | Navigate history |
 | `Escape` | Clear input |
+| `Tab` | Toggle command menu (shows your most used commands) |
 
 ## 🏗️ Architecture
 
@@ -248,36 +258,34 @@ src/
 ├── query.ts           # Core agent loop (async generator)
 ├── QueryEngine.ts     # Conversation lifecycle manager
 ├── context.ts         # System context gathering (git, cwd, date)
+├── constants/         # System prompts (localized)
 ├── screens/           # REPL screen (React/Ink)
 ├── components/        # UI components
-│   ├── Messages/      # Conversation rendering
+│   ├── Messages/      # Conversation rendering with markdown
 │   ├── PromptInput/   # User input handling
-│   ├── Mimo/          # Avatar display
+│   ├── StatusLine/    # Execution status display
 │   ├── StructuredDiff/# Diff visualization
 │   ├── HighlightedCode/# Syntax highlighting
 │   └── design-system/ # Button, Card, Table primitives
-├── tools/             # 13 built-in tool implementations
+├── tools/             # 23 built-in tool implementations
+├── commands/          # 46 slash commands (all i18n-enabled)
 ├── services/
-│   ├── api/           # API client + adapters (OpenAI, Anthropic, MiMo)
+│   ├── api/           # API client + adapters (OpenAI, MiMo)
 │   ├── tools/         # Tool execution engine & orchestration
+│   ├── compact/       # Context compression & token budget
 │   ├── permissions/   # Permission checker (5 modes)
-│   ├── mcp/           # MCP client (JSON-RPC 2.0 over stdio)
-│   └── lsp/           # LSP client (stub)
-├── plugins/           # EventBus + PluginManager + loader
-├── commands/          # 15+ slash commands
-├── skills/            # Skill system (remember, simplify)
-├── buddy/             # Xiaomi Cat mascot (animated ASCII art)
-├── state/             # Custom state store
+│   └── mcp/           # MCP client (JSON-RPC 2.0 over stdio)
+├── state/             # App state management (React context)
+├── session/           # Session persistence
 ├── utils/
 │   ├── settings/      # Layered config (user → project → local → flags)
-│   └── themes.ts      # 5 built-in themes
-├── modes/             # single.ts, pipe.ts
+│   ├── i18n.ts        # Internationalization (zh-CN, en, ja)
+│   ├── themes.ts      # 5 built-in themes
+│   └── commandUsage.ts # Command usage tracking
+├── buddy/             # Xiaomi Cat mascot (animated ASCII art)
+├── plugins/           # EventBus + PluginManager + loader
+├── skills/            # Skill system (remember, simplify)
 ├── hooks/             # Hook registry
-├── keybindings/       # Key binding parser
-├── history/           # Conversation history store
-├── session/           # Session persistence
-├── tasks/             # Task manager
-├── telemetry/         # Usage telemetry
 └── vim/               # Vim mode state
 ```
 
@@ -286,9 +294,9 @@ src/
 The heart of Mimo Code is the **query loop** (`query.ts`):
 
 ```
-User Input → System Prompt + Context → API Request (streaming)
+User Input → Localized System Prompt + Context → API Request (streaming)
     ↓
-Text chunks → Display in terminal
+Text chunks → Display in terminal (with markdown rendering)
 Tool calls → Execute via ToolRegistry → Append results → Loop
     ↓
 (max 20 turns or until no more tool calls)
@@ -342,9 +350,9 @@ npm run typecheck
 npm run lint
 ```
 
-The project includes **62 test files** covering:
-- Unit tests for all 13 tools
-- API adapter tests (OpenAI, Anthropic, MiMo)
+The project includes **62 test files** with **432 tests** covering:
+- Unit tests for all 23 tools
+- API adapter tests (OpenAI, MiMo)
 - Query engine and conversation flow tests
 - Plugin, permission, and settings system tests
 - Integration tests for agent conversation flows
