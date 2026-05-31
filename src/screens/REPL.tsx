@@ -23,6 +23,9 @@ import {
   themeCommand, usageCommand, statusCommand, permissionsCommand,
   planCommand, exportCommand, renameCommand, sessionCommand,
   mcpCommand, skillsCommand, tasksCommand,
+  contextCommand, statsCommand, effortCommand, filesCommand,
+  copyCommand, envCommand, initCommand, keybindingsCommand,
+  outputStyleCommand, feedbackCommand, sandboxCommand,
 } from '../commands/index.js';
 import { CompanionSprite, type CatState } from '../buddy/CompanionSprite.js';
 import { useTheme } from '../utils/useTheme.js';
@@ -94,6 +97,9 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       themeCommand, usageCommand, statusCommand, permissionsCommand,
       planCommand, exportCommand, renameCommand, sessionCommand,
       mcpCommand, skillsCommand, tasksCommand, languageCommand,
+      contextCommand, statsCommand, effortCommand, filesCommand,
+      copyCommand, envCommand, initCommand, keybindingsCommand,
+      outputStyleCommand, feedbackCommand, sandboxCommand,
     ];
     for (const cmd of cmds) commandRegistry.current.register(cmd);
   }, []);
