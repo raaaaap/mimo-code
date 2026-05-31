@@ -35,6 +35,7 @@ import { useTheme } from '../utils/useTheme.js';
 import { THEME_CHANGE_PREFIX } from '../commands/theme.js';
 import { languageCommand, LANGUAGE_CHANGE_PREFIX } from '../commands/language.js';
 import { t } from '../utils/i18n.js';
+import { trackCommandUsage, getTopCommands, getDefaultTopCommands } from '../utils/commandUsage.js';
 
 interface REPLScreenProps {
   apiKey: string;
@@ -52,10 +53,16 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
   const [showCommands, setShowCommands] = useState(false);
   const [execStatus, setExecStatus] = useState<'idle' | 'thinking' | 'executing'>('idle');
   const [activeToolName, setActiveToolName] = useState<string>();
+  const [topCommands, setTopCommands] = useState<string[]>(getDefaultTopCommands());
 
   const baseUrl = useAppState((s) => s.baseUrl);
   const debug = useAppState((s) => s.debug);
   const language = useAppState((s) => s.language);
+
+  // Load top commands on mount
+  useEffect(() => {
+    getTopCommands().then(setTopCommands);
+  }, []);
 
   // Track execution state from message history
   // Only update tool name and executing/thinking state — never reset to idle here
@@ -155,6 +162,9 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       // Check if input is a slash command
       const parsed = commandRegistry.current.parse(input);
       if (parsed) {
+        // Track command usage for personalized TAB menu
+        trackCommandUsage(parsed.command.name).then(() => getTopCommands().then(setTopCommands));
+
         const result = await parsed.command.call(parsed.args, { model, verbose, debug });
         if (result === CLEAR_SENTINET) {
           store.setState({ messages: [] });
@@ -259,11 +269,8 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
         <Box flexDirection="column" marginTop={1} borderStyle="round" borderColor={theme.colors.muted} paddingX={1}>
           <Text bold color={theme.colors.primary}>{t(language, 'commands_title')}</Text>
           {commandRegistry.current.getAll()
-            .filter((cmd) => {
-              // Show top commands by default, filter if user is typing
-              const topCommands = ['help', 'clear', 'compact', 'model', 'theme', 'language', 'config', 'permissions', 'plan', 'status', 'usage', 'memory'];
-              return topCommands.includes(cmd.name);
-            })
+            .filter((cmd) => topCommands.includes(cmd.name))
+            .sort((a, b) => topCommands.indexOf(a.name) - topCommands.indexOf(b.name))
             .map((cmd) => (
               <Text key={cmd.name}>
                 <Text color={theme.colors.primary}>/{cmd.name}</Text>
