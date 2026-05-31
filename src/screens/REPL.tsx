@@ -69,6 +69,14 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
     getTopCommands().then(setTopCommands);
   }, []);
 
+  // Update system prompt when language changes
+  useEffect(() => {
+    if (engineRef.current && toolRegistryRef.current) {
+      const allTools = toolRegistryRef.current.getAll();
+      engineRef.current.updateSystemPrompt(getSystemPrompt(allTools, getSystemContext(), undefined, language));
+    }
+  }, [language]);
+
   // Track execution state from message history
   // Only update tool name and executing/thinking state — never reset to idle here
   // (idle is only set when isProcessing becomes false in handleSubmit)
@@ -134,6 +142,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
   }, []);
   const contextManager = useRef(new ContextManager({ maxTokens: 8000 }));
   const engineRef = useRef<QueryEngine | null>(null);
+  const toolRegistryRef = useRef<ReturnType<typeof createDefaultRegistry> | null>(null);
   if (!engineRef.current) {
     const client = new APIClient(baseUrl, apiKey);
     const toolRegistry = createDefaultRegistry({
@@ -141,6 +150,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       getTool: (name: string) => toolRegistry.get(name),
       getToolDefinitions: () => toolRegistry.toToolDefinitions(),
     });
+    toolRegistryRef.current = toolRegistry;
     const toolContext: ToolUseContext = {
       options: { model },
       abortController: new AbortController(),
@@ -160,7 +170,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       getTool: (name: string) => toolRegistry.get(name),
       toolContext,
       model,
-      systemPrompt: getSystemPrompt(allTools, getSystemContext()),
+      systemPrompt: getSystemPrompt(allTools, getSystemContext(), undefined, language),
       tools: toolRegistry.toToolDefinitions(),
     });
   }

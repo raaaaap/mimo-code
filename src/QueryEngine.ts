@@ -78,4 +78,8 @@ export class QueryEngine {
   getUsage(): TokenUsage {
     return { ...this.totalUsage };
   }
+
+  updateSystemPrompt(prompt: string): void {
+    this.config.systemPrompt = prompt;
+  }
 }
