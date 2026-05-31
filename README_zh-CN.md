@@ -37,7 +37,7 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 
 ## ✨ 功能特性
 
-### 🛠️ 19 个内置工具
+### 🛠️ 23 个内置工具
 
 | 工具 | 描述 | 并发 |
 |------|------|:----:|
@@ -60,6 +60,10 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 | **TaskOutput** | 获取后台任务输出，支持阻塞等待 | ✅ |
 | **TaskStop** | 停止正在运行的后台任务 | — |
 | **SendMessage** | 代理间通信（支持广播） | — |
+| **ListMcpResources** | 列出可用的 MCP 资源 | ✅ |
+| **ReadMcpResource** | 按 URI 读取 MCP 资源 | ✅ |
+| **EnterWorktree** | 创建并进入 git worktree 进行隔离工作 | — |
+| **ExitWorktree** | 退出并可选删除 git worktree | — |
 
 ### 🔌 多供应商 API 支持
 
@@ -81,7 +85,7 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 - **权限系统** — 5 种模式：`default`、`acceptEdits`、`bypassPermissions`、`plan`、`auto`
 - **插件系统** — 事件驱动架构，支持 `EventBus` 和插件发现
 - **MCP 客户端** — 通过 stdio 的 JSON-RPC 2.0 支持 Model Context Protocol
-- **斜杠命令** — 24 个命令，用于会话控制、模型切换和诊断
+- **斜杠命令** — 35+ 个命令，用于会话控制、模型切换、诊断等
 - **主题系统** — 5 个内置主题：`mimo-dark`、`mimo-light`、`dracula`、`nord`、`solarized-dark`
 - **多模式执行** — 交互式 REPL、单次提示和管道模式
 

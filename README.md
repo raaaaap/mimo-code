@@ -36,7 +36,7 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 
 ## ✨ Features
 
-### 🛠️ 19 Built-in Tools
+### 🛠️ 23 Built-in Tools
 
 | Tool | Description | Concurrency |
 |------|-------------|:-----------:|
@@ -59,6 +59,10 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 | **TaskOutput** | Get background task output with blocking wait | ✅ |
 | **TaskStop** | Stop a running background task | — |
 | **SendMessage** | Send messages between agents (supports broadcast) | — |
+| **ListMcpResources** | List available MCP resources | ✅ |
+| **ReadMcpResource** | Read MCP resource by URI | ✅ |
+| **EnterWorktree** | Create and enter a git worktree for isolated work | — |
+| **ExitWorktree** | Exit and optionally remove a git worktree | — |
 
 ### 🔌 Multi-Provider API Support
 
@@ -80,7 +84,7 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 - **Permission System** — 5 modes: `default`, `acceptEdits`, `bypassPermissions`, `plan`, `auto`
 - **Plugin System** — Event-driven architecture with `EventBus` and plugin discovery
 - **MCP Client** — Model Context Protocol support via JSON-RPC 2.0 over stdio
-- **Slash Commands** — 19 commands for session control, model switching, and diagnostics
+- **Slash Commands** — 35+ commands for session control, model switching, diagnostics, and more
 - **Theme System** — 5 built-in themes: `mimo-dark`, `mimo-light`, `dracula`, `nord`, `solarized-dark`
 - **Multi-mode Execution** — Interactive REPL, single-shot prompts, and pipe mode
 
@@ -194,30 +198,35 @@ cat main.ts | mimo --mode pipe "Explain this file"
 | `/compact` | | Compact conversation history |
 | `/config` | | Show current configuration |
 | `/commit` | `/ci` | Stage all changes and commit |
+| `/context` | | Show current context window status |
 | `/cost` | | Show cost breakdown |
 | `/diff` | | Show git diff |
 | `/doctor` | | Run diagnostics |
+| `/effort` | | Adjust reasoning effort level |
 | `/export` | | Export conversation |
 | `/fast` | | Toggle fast mode |
+| `/files` | | List files modified in session |
 | `/model` | `/m` | Show or switch model |
 | `/theme` | `/t` | Show or switch color theme |
 | `/language` | `/lang`, `/locale` | Show or switch UI language (zh-CN, en, ja) |
 | `/mcp` | | MCP server management |
+| `/memory` | | View or edit persistent memory |
 | `/permissions` | `/perms`, `/perm` | Show or set permission mode |
 | `/plan` | | Enter plan mode |
 | `/rename` | | Rename session |
 | `/resume` | | Resume previous session |
+| `/review` | | Review recent changes |
 | `/session` | | Session management |
 | `/skills` | | List available skills |
+| `/stats` | | Show session statistics |
 | `/status` | | Show session status |
 | `/tasks` | | Task management |
 | `/usage` | | Show token usage |
+| `/vim` | | Toggle vim keybinding mode |
 | `/buddy` | | Cat mascot settings |
-| `/plan` | | Enter plan mode |
-| `/export` | | Export conversation |
-| `/session` | | Session management |
-| `/skills` | | List available skills |
-| `/tasks` | | Task management |
+| `/branch` | | Show or switch git branches |
+| `/login` | | Authenticate with MiMo API |
+| `/logout` | | Clear authentication |
 
 ### Keyboard Shortcuts
 
