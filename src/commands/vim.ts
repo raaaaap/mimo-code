@@ -1,10 +1,11 @@
 import type { Command } from '../commands.js';
+import { t } from '../utils/i18n.js';
 
 export const vimCommand: Command = {
   name: 'vim',
   description: 'Toggle vim keybinding mode',
   isEnabled: () => true,
-  call: async () => {
-    return 'Vim mode toggled. Vim keybindings are now active.\nUse /keybindings to see available keys.';
+  call: async (args, context) => {
+    return t(context.language, 'cmd_vim_toggled') + '\n' + t(context.language, 'cmd_vim_hint');
   },
 };

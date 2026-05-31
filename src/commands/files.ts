@@ -1,10 +1,11 @@
 import type { Command } from '../commands.js';
+import { t } from '../utils/i18n.js';
 
 export const filesCommand: Command = {
   name: 'files',
   description: 'List files modified in this session',
   isEnabled: () => true,
-  call: async () => {
-    return 'Files modified in this session:\n  (tracking not yet implemented)';
+  call: async (args, context) => {
+    return t(context.language, 'cmd_files_none');
   },
 };

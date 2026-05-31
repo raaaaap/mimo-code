@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { Language } from './utils/i18n.js';
 
 export interface CommandArgument {
   name: string;
@@ -18,6 +19,7 @@ export interface CommandContext {
   model: string;
   verbose: boolean;
   debug: boolean;
+  language: Language;
 }
 
 export interface Command {

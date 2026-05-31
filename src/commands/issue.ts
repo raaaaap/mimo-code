@@ -1,10 +1,11 @@
 import type { Command } from '../commands.js';
+import { t } from '../utils/i18n.js';
 
 export const issueCommand: Command = {
   name: 'issue',
   description: 'Report an issue',
   isEnabled: () => true,
-  call: async () => {
-    return 'To report an issue, please visit:\nhttps://github.com/raaaaap/mimo-code/issues/new';
+  call: async (args, context) => {
+    return t(context.language, 'cmd_issue_url');
   },
 };

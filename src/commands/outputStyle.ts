@@ -1,14 +1,15 @@
 import type { Command } from '../commands.js';
+import { t } from '../utils/i18n.js';
 
 export const outputStyleCommand: Command = {
   name: 'output-style',
   description: 'Set output style',
   arguments: [{ name: 'style', description: 'text, json, or markdown', required: false }],
   isEnabled: () => true,
-  call: async (args) => {
+  call: async (args, context) => {
     const style = args.trim().toLowerCase();
-    if (!style) return 'Current output style: text\nUsage: /output-style <text|json|markdown>';
-    if (!['text', 'json', 'markdown'].includes(style)) return 'Invalid style. Use: text, json, or markdown';
-    return `Output style set to: ${style}`;
+    if (!style) return t(context.language, 'cmd_output_style_set') + 'text\n' + t(context.language, 'cmd_output_style_usage');
+    if (!['text', 'json', 'markdown'].includes(style)) return t(context.language, 'cmd_output_style_invalid');
+    return t(context.language, 'cmd_output_style_set') + style;
   },
 };
