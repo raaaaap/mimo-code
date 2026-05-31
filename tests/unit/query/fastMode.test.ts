@@ -36,14 +36,14 @@ describe('createFastCommand', () => {
 
   it('switches to fast model when currently on default', async () => {
     const { cmd, getModel } = setup();
-    const result = await cmd.call('', { model: DEFAULT_MODEL, verbose: false, debug: false });
+    const result = await cmd.call('', { model: DEFAULT_MODEL, verbose: false, debug: false, language: 'en' as const });
     expect(getModel()).toBe(FAST_MODEL);
     expect(result).toContain(FAST_MODEL);
   });
 
   it('switches back to default model when currently on fast', async () => {
     const { cmd, getModel } = setup(FAST_MODEL);
-    const result = await cmd.call('', { model: FAST_MODEL, verbose: false, debug: false });
+    const result = await cmd.call('', { model: FAST_MODEL, verbose: false, debug: false, language: 'en' as const });
     expect(getModel()).toBe(DEFAULT_MODEL);
     expect(result).toContain(DEFAULT_MODEL);
   });
@@ -51,13 +51,13 @@ describe('createFastCommand', () => {
   it('toggles back and forth correctly', async () => {
     const { cmd, getModel } = setup();
 
-    await cmd.call('', { model: DEFAULT_MODEL, verbose: false, debug: false });
+    await cmd.call('', { model: DEFAULT_MODEL, verbose: false, debug: false, language: 'en' as const });
     expect(getModel()).toBe(FAST_MODEL);
 
-    await cmd.call('', { model: FAST_MODEL, verbose: false, debug: false });
+    await cmd.call('', { model: FAST_MODEL, verbose: false, debug: false, language: 'en' as const });
     expect(getModel()).toBe(DEFAULT_MODEL);
 
-    await cmd.call('', { model: DEFAULT_MODEL, verbose: false, debug: false });
+    await cmd.call('', { model: DEFAULT_MODEL, verbose: false, debug: false, language: 'en' as const });
     expect(getModel()).toBe(FAST_MODEL);
   });
 });

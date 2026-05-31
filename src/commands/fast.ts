@@ -1,4 +1,5 @@
 import type { Command } from '../commands.js';
+import type { Language } from '../utils/i18n.js';
 
 /**
  * Factory that creates the `/fast` command, which toggles between the
@@ -20,14 +21,19 @@ export function createFastCommand(
     aliases: ['speed'],
     description: 'Toggle fast mode (lightweight model)',
     isEnabled: () => true,
-    call: async () => {
+    call: async (_args, context) => {
+      const lang: Language = context.language;
       const current = getModel();
       if (current === fastModel) {
         setModel(defaultModel);
-        return `Switched to default model: ${defaultModel}`;
+        return lang === 'zh-CN' ? `已切换到默认模型：${defaultModel}` :
+               lang === 'ja' ? `デフォルトモデルに切り替え：${defaultModel}` :
+               `Switched to default model: ${defaultModel}`;
       }
       setModel(fastModel);
-      return `Switched to fast model: ${fastModel}`;
+      return lang === 'zh-CN' ? `已切换到快速模型：${fastModel}` :
+             lang === 'ja' ? `高速モデルに切り替え：${fastModel}` :
+             `Switched to fast model: ${fastModel}`;
     },
   };
 }

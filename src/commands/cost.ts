@@ -1,4 +1,5 @@
 import type { Command } from '../commands.js';
+import type { Language } from '../utils/i18n.js';
 import { CostTracker } from '../cost-tracker.js';
 
 /**
@@ -19,26 +20,31 @@ export const costCommand: Command = {
   name: 'cost',
   description: 'Show cost breakdown for this session',
   isEnabled: () => true,
-  call: async () => {
+  call: async (_args, context) => {
+    const lang: Language = context.language;
     const entries = costTracker.getEntries();
     const total = costTracker.getTotalCost();
     const byModel = costTracker.getCostByModel();
     const models = Object.keys(byModel);
 
     if (entries.length === 0) {
-      return 'No costs recorded this session.';
+      return lang === 'zh-CN' ? '本次会话暂无费用记录。' :
+             lang === 'ja' ? 'このセッションのコスト記録はありません。' :
+             'No costs recorded this session.';
     }
 
     const lines: string[] = [];
-    lines.push('Session Cost Breakdown');
+    lines.push(lang === 'zh-CN' ? '会话费用明细' :
+               lang === 'ja' ? 'セッションコスト明細' :
+               'Session Cost Breakdown');
     lines.push('─'.repeat(48));
 
     // Table header
     lines.push(
-      padRight('Model', 20) +
-        padRight('Input Tokens', 16) +
-        padRight('Output Tokens', 16) +
-        padRight('Cost', 12),
+      padRight(lang === 'zh-CN' ? '模型' : lang === 'ja' ? 'モデル' : 'Model', 20) +
+        padRight(lang === 'zh-CN' ? '输入Token' : lang === 'ja' ? '入力トークン' : 'Input Tokens', 16) +
+        padRight(lang === 'zh-CN' ? '输出Token' : lang === 'ja' ? '出力トークン' : 'Output Tokens', 16) +
+        padRight(lang === 'zh-CN' ? '费用' : lang === 'ja' ? 'コスト' : 'Cost', 12),
     );
     lines.push('─'.repeat(48));
 
@@ -59,12 +65,12 @@ export const costCommand: Command = {
 
     lines.push('─'.repeat(48));
     lines.push(
-      padRight('Total', 20) +
+      padRight(lang === 'zh-CN' ? '总计' : lang === 'ja' ? '合計' : 'Total', 20) +
         padRight('', 16) +
         padRight('', 16) +
         padRight(formatUSD(total), 12),
     );
-    lines.push(`\nRequests: ${entries.length}`);
+    lines.push(`\n${lang === 'zh-CN' ? '请求数' : lang === 'ja' ? 'リクエスト数' : 'Requests'}: ${entries.length}`);
 
     return lines.join('\n');
   },
