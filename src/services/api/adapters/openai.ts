@@ -109,6 +109,7 @@ export class OpenAIAdapter implements ModelAdapter {
       tool_choice: request.toolChoice,
       max_tokens: request.maxTokens ?? 4096,
       stream,
+      stream_options: { include_usage: true },
     };
 
     // Only send temperature when thinking is disabled (many providers
