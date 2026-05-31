@@ -46,6 +46,7 @@ export function resolveApiKey(settings: SettingsJson): string | undefined {
 
 export function resolveBaseUrl(settings: SettingsJson): string {
   return settings.baseUrl
+    ?? (settings as any).apiEndpoint  // backward compatibility
     ?? process.env.MIMO_BASE_URL
     ?? process.env.OPENAI_API_BASE
     ?? 'https://api.xiaomimimo.com/v1';
