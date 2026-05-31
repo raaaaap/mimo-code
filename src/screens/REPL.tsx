@@ -27,7 +27,7 @@ import {
   copyCommand, envCommand, initCommand, keybindingsCommand,
   outputStyleCommand, feedbackCommand, sandboxCommand,
   memoryCommand, reviewCommand, historyCommand, addDirCommand,
-  createBuddyCommand,
+  createBuddyCommand, costCommand,
   issueCommand, upgradeCommand,
   vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
 } from '../commands/index.js';
@@ -114,6 +114,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       memoryCommand, reviewCommand, historyCommand, addDirCommand,
       issueCommand, upgradeCommand,
       vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
+      costCommand,
     ];
     // Register buddy command with deps
     const buddyCommand = createBuddyCommand({
