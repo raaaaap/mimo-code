@@ -1,5 +1,7 @@
 import type { Command } from '../commands.js';
-import { t } from '../utils/i18n.js';
+import type { Language } from '../utils/i18n.js';
+
+let currentStyle = 'text';
 
 export const outputStyleCommand: Command = {
   name: 'output-style',
@@ -8,8 +10,23 @@ export const outputStyleCommand: Command = {
   isEnabled: () => true,
   call: async (args, context) => {
     const style = args.trim().toLowerCase();
-    if (!style) return t(context.language, 'cmd_output_style_set') + 'text\n' + t(context.language, 'cmd_output_style_usage');
-    if (!['text', 'json', 'markdown'].includes(style)) return t(context.language, 'cmd_output_style_invalid');
-    return t(context.language, 'cmd_output_style_set') + style;
+    if (!style) {
+      return context.language === 'zh-CN' ? `当前输出风格：${currentStyle}\n用法：/output-style <text|json|markdown>` :
+             context.language === 'ja' ? `現在の出力スタイル：${currentStyle}\n使い方：/output-style <text|json|markdown>` :
+             `Current output style: ${currentStyle}\nUsage: /output-style <text|json|markdown>`;
+    }
+    if (!['text', 'json', 'markdown'].includes(style)) {
+      return context.language === 'zh-CN' ? '无效风格。使用：text、json 或 markdown' :
+             context.language === 'ja' ? '無効なスタイル。使用：text、json、markdown' :
+             'Invalid style. Use: text, json, or markdown';
+    }
+    currentStyle = style;
+    return context.language === 'zh-CN' ? `输出风格已设置为：${style}` :
+           context.language === 'ja' ? `出力スタイルが設定されました：${style}` :
+           `Output style set to: ${style}`;
   },
 };
+
+export function getOutputStyle(): string {
+  return currentStyle;
+}
