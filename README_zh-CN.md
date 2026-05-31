@@ -85,7 +85,7 @@ Mimo Code 是一款终端 AI 编程助手，将 MiMo 大语言模型的能力融
 - **权限系统** — 5 种模式：`default`、`acceptEdits`、`bypassPermissions`、`plan`、`auto`
 - **插件系统** — 事件驱动架构，支持 `EventBus` 和插件发现
 - **MCP 客户端** — 通过 stdio 的 JSON-RPC 2.0 支持 Model Context Protocol
-- **斜杠命令** — 45+ 个命令，用于会话控制、模型切换、诊断等（TAB 显示你最常用的命令）
+- **斜杠命令** — 46 个命令，用于会话控制、模型切换、诊断等（TAB 显示你最常用的命令）
 - **主题系统** — 5 个内置主题：`mimo-dark`、`mimo-light`、`dracula`、`nord`、`solarized-dark`
 - **多模式执行** — 交互式 REPL、单次提示和管道模式
 

@@ -84,7 +84,7 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 - **Permission System** — 5 modes: `default`, `acceptEdits`, `bypassPermissions`, `plan`, `auto`
 - **Plugin System** — Event-driven architecture with `EventBus` and plugin discovery
 - **MCP Client** — Model Context Protocol support via JSON-RPC 2.0 over stdio
-- **Slash Commands** — 45+ commands for session control, model switching, diagnostics, and more (TAB shows your most used commands)
+- **Slash Commands** — 46 commands for session control, model switching, diagnostics, and more (TAB shows your most used commands)
 - **Theme System** — 5 built-in themes: `mimo-dark`, `mimo-light`, `dracula`, `nord`, `solarized-dark`
 - **Multi-mode Execution** — Interactive REPL, single-shot prompts, and pipe mode
 
