@@ -35,6 +35,7 @@ import { CompanionSprite, type CatState } from '../buddy/CompanionSprite.js';
 import { useTheme } from '../utils/useTheme.js';
 import { THEME_CHANGE_PREFIX } from '../commands/theme.js';
 import { languageCommand, LANGUAGE_CHANGE_PREFIX } from '../commands/language.js';
+import { PLAN_MODE_PREFIX } from '../commands/plan.js';
 import { t } from '../utils/i18n.js';
 import { trackCommandUsage, getTopCommands, getDefaultTopCommands } from '../utils/commandUsage.js';
 import { costTracker } from '../commands/cost.js';
@@ -195,6 +196,32 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
           store.setState({ language: lang as any });
           const confirmMsg: Message = { role: 'assistant', content: `${t(lang as any, 'language_changed')} ${lang}` };
           store.setState({ messages: [...store.getState().messages, confirmMsg] });
+          return;
+        }
+        if (result && result.startsWith(PLAN_MODE_PREFIX)) {
+          const task = result.slice(PLAN_MODE_PREFIX.length);
+          // Enter plan mode by sending a planning prompt to the LLM
+          const planPrompt = language === 'zh-CN' ?
+            `请为以下任务制定详细计划（不要执行，只规划）：\n${task}\n\n完成后使用 /plan 退出计划模式。` :
+            language === 'ja' ?
+            `以下のタスクの詳細な計画を立ててください（実行しない、計画のみ）：\n${task}\n\n完了後に /plan でプランモードを終了してください。` :
+            `Create a detailed plan for the following task (do not execute, just plan):\n${task}\n\nUse /plan to exit plan mode when done.`;
+          // Process as a regular message
+          const engine = engineRef.current!;
+          store.setState({ isProcessing: true });
+          setCatState('thinking');
+          setExecStatus('thinking');
+          try {
+            for await (const msg of engine.submitMessage(planPrompt)) {
+              store.setState({ messages: engine.getMessages(), isProcessing: true });
+            }
+            store.setState({ messages: engine.getMessages(), isProcessing: false });
+            setCatState('success');
+            setTimeout(() => setCatState('idle'), 2000);
+          } catch (err) {
+            store.setState({ messages: engine.getMessages(), isProcessing: false });
+            setCatState('error');
+          }
           return;
         }
         if (result) {
