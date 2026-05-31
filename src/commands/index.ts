@@ -30,3 +30,8 @@ export { historyCommand } from './history.js';
 export { addDirCommand } from './addDir.js';
 export { issueCommand } from './issue.js';
 export { upgradeCommand } from './upgrade.js';
+export { vimCommand } from './vim.js';
+export { loginCommand } from './login.js';
+export { logoutCommand } from './logout.js';
+export { branchCommand } from './branch.js';
+export { prCommentsCommand } from './prComments.js';

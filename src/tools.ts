@@ -21,6 +21,8 @@ import { TaskOutputTool } from './tools/TaskOutputTool/TaskOutputTool.js';
 import { SendMessageTool } from './tools/SendMessageTool/SendMessageTool.js';
 import { ListMcpResourcesTool } from './tools/ListMcpResourcesTool/ListMcpResourcesTool.js';
 import { ReadMcpResourceTool } from './tools/ReadMcpResourceTool/ReadMcpResourceTool.js';
+import { EnterWorktreeTool } from './tools/EnterWorktreeTool/EnterWorktreeTool.js';
+import { ExitWorktreeTool } from './tools/ExitWorktreeTool/ExitWorktreeTool.js';
 
 export class ToolRegistry {
   private tools = new Map<string, Tool>();
@@ -99,5 +101,7 @@ export function createDefaultRegistry(agentDeps?: AgentToolDeps): ToolRegistry {
   registry.register(SendMessageTool());
   registry.register(ListMcpResourcesTool());
   registry.register(ReadMcpResourceTool());
+  registry.register(EnterWorktreeTool);
+  registry.register(ExitWorktreeTool);
   return registry;
 }

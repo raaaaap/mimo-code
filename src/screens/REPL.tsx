@@ -28,6 +28,7 @@ import {
   outputStyleCommand, feedbackCommand, sandboxCommand,
   memoryCommand, reviewCommand, historyCommand, addDirCommand,
   issueCommand, upgradeCommand,
+  vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
 } from '../commands/index.js';
 import { CompanionSprite, type CatState } from '../buddy/CompanionSprite.js';
 import { useTheme } from '../utils/useTheme.js';
@@ -104,6 +105,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       outputStyleCommand, feedbackCommand, sandboxCommand,
       memoryCommand, reviewCommand, historyCommand, addDirCommand,
       issueCommand, upgradeCommand,
+      vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
     ];
     for (const cmd of cmds) commandRegistry.current.register(cmd);
   }, []);
