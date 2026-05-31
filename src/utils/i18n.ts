@@ -13,6 +13,8 @@ interface Translations {
   executing: string;
   abort_hint: string;
   commands_hint: string;
+  commands_title: string;
+  commands_more: string;
   error_connect: string;
   error_unknown: string;
   language_changed: string;
@@ -25,7 +27,9 @@ const translations: Record<Language, Translations> = {
     thinking: '💭 思考中...',
     executing: '⚡ 执行中:',
     abort_hint: '按 Escape 中止',
-    commands_hint: '按 Tab 查看所有命令',
+    commands_hint: '按 Tab 查看常用命令',
+    commands_title: '常用命令：',
+    commands_more: '输入 /help 查看全部命令',
     error_connect: '无法连接到 API 服务器',
     error_unknown: '未知错误',
     language_changed: '语言已切换为：',
@@ -36,7 +40,9 @@ const translations: Record<Language, Translations> = {
     thinking: '💭 Thinking...',
     executing: '⚡ Executing:',
     abort_hint: 'Press Escape to abort',
-    commands_hint: 'Press Tab to see all commands',
+    commands_hint: 'Press Tab for common commands',
+    commands_title: 'Common Commands:',
+    commands_more: 'Type /help for all commands',
     error_connect: 'Cannot connect to API server',
     error_unknown: 'Unknown error',
     language_changed: 'Language changed to:',
@@ -47,7 +53,9 @@ const translations: Record<Language, Translations> = {
     thinking: '💭 思考中...',
     executing: '⚡ 実行中:',
     abort_hint: 'Escape で中止',
-    commands_hint: 'Tab でコマンド一覧',
+    commands_hint: 'Tab でよく使うコマンド',
+    commands_title: 'よく使うコマンド：',
+    commands_more: '/help ですべてのコマンドを表示',
     error_connect: 'API サーバーに接続できません',
     error_unknown: '不明なエラー',
     language_changed: '言語が変更されました：',

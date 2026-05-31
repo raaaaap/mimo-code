@@ -257,16 +257,23 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       {/* Command hint / menu */}
       {showCommands ? (
         <Box flexDirection="column" marginTop={1} borderStyle="round" borderColor={theme.colors.muted} paddingX={1}>
-          <Text bold color={theme.colors.primary}>Available Commands:</Text>
-          {commandRegistry.current.getAll().map((cmd) => (
-            <Text key={cmd.name}>
-              <Text color={theme.colors.primary}>/{cmd.name}</Text>
-              {cmd.aliases && cmd.aliases.length > 0 && (
-                <Text color={theme.colors.muted}> ({cmd.aliases.join(', ')})</Text>
-              )}
-              <Text color={theme.colors.muted}> — {cmd.description}</Text>
-            </Text>
-          ))}
+          <Text bold color={theme.colors.primary}>{t(language, 'commands_title')}</Text>
+          {commandRegistry.current.getAll()
+            .filter((cmd) => {
+              // Show top commands by default, filter if user is typing
+              const topCommands = ['help', 'clear', 'compact', 'model', 'theme', 'language', 'config', 'permissions', 'plan', 'status', 'usage', 'memory'];
+              return topCommands.includes(cmd.name);
+            })
+            .map((cmd) => (
+              <Text key={cmd.name}>
+                <Text color={theme.colors.primary}>/{cmd.name}</Text>
+                {cmd.aliases && cmd.aliases.length > 0 && (
+                  <Text color={theme.colors.muted}> ({cmd.aliases.join(', ')})</Text>
+                )}
+                <Text color={theme.colors.muted}> — {cmd.description}</Text>
+              </Text>
+            ))}
+          <Text color={theme.colors.muted} dimColor>{t(language, 'commands_more')}</Text>
           <Text color={theme.colors.muted} dimColor>{t(language, 'commands_hint')}</Text>
         </Box>
       ) : (
