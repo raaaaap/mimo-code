@@ -1,7 +1,7 @@
 export interface CLIOptions {
   model: string;
   apiKey?: string;
-  apiEndpoint?: string;
+  baseUrl?: string;
   mode: 'interactive' | 'single' | 'pipe';
   verbose: boolean;
   debug: boolean;
@@ -35,7 +35,7 @@ export interface BuddyConfig {
 export interface SettingsJson {
   model?: string;
   apiKey?: string;
-  apiEndpoint?: string;
+  baseUrl?: string;
   theme?: string;
   maxTokens?: number;
   temperature?: number;

@@ -95,7 +95,8 @@ npm link          # Register 'mimo' command globally
 **Option A: Environment variable**
 
 ```bash
-export MIMO_API_KEY=your-api-key-here
+export MIMO_API_KEY=sk-your-api-key-here
+export MIMO_BASE_URL=https://api.xiaomimimo.com/v1
 ```
 
 **Option B: Settings file**
@@ -105,12 +106,19 @@ Create `~/.mimo/settings.json`:
 ```json
 {
   "model": "mimo-v2.5",
-  "apiKey": "your-api-key-here",
-  "apiEndpoint": "https://api.mimo.ai/v1"
+  "apiKey": "sk-your-api-key-here",
+  "baseUrl": "https://api.xiaomimimo.com/v1"
 }
 ```
 
 **Option C: Interactive setup** — Mimo Code will prompt you on first run.
+
+### MiMo API Plans
+
+| Plan | Base URL (OpenAI) | Base URL (Anthropic) | API Key Format |
+|------|-------------------|---------------------|----------------|
+| **Pay-per-use** | `https://api.xiaomimimo.com/v1` | `https://api.xiaomimimo.com/anthropic` | `sk-xxxxx` |
+| **Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `https://token-plan-cn.xiaomimimo.com/anthropic` | `tp-xxxxx` |
 
 ### Run
 
@@ -138,7 +146,7 @@ mimo [options] [prompt]
 Options:
   -m, --model <model>          Model to use (default: "mimo-v2.5")
   -k, --api-key <key>          API key
-  --api-endpoint <url>         API endpoint URL
+  --base-url <url>             API base URL
   --mode <mode>                Mode: interactive, single, pipe (default: "interactive")
   -v, --verbose                Verbose output
   --debug                      Debug mode
@@ -272,8 +280,8 @@ Settings are merged from four sources (highest priority first):
 
 | Variable | Description |
 |----------|-------------|
-| `MIMO_API_KEY` | MiMo API key |
-| `MIMO_API_ENDPOINT` | MiMo API endpoint (default: `https://api.mimo.ai/v1`) |
+| `MIMO_API_KEY` | MiMo API key (`sk-` or `tp-` prefix) |
+| `MIMO_BASE_URL` | MiMo API base URL (default: `https://api.xiaomimimo.com/v1`) |
 | `OPENAI_API_KEY` | OpenAI API key (fallback) |
 | `OPENAI_API_BASE` | OpenAI API base URL (fallback) |
 

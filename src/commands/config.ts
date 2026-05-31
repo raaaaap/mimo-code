@@ -33,17 +33,17 @@ export const configCommand: Command = {
       return [
         'Current configuration (~/.mimo/settings.json):',
         `  apiKey: ${settings.apiKey ? '****' + String(settings.apiKey).slice(-4) : '(not set)'}`,
-        `  apiEndpoint: ${settings.apiEndpoint ?? '(not set)'}`,
+        `  baseUrl: ${settings.baseUrl ?? '(not set)'}`,
         `  model: ${settings.model ?? '(not set)'}`,
         `  theme: ${settings.theme ?? 'mimo-dark'}`,
         '',
         'Environment variables:',
         `  MIMO_API_KEY: ${process.env.MIMO_API_KEY ? '****' + process.env.MIMO_API_KEY.slice(-4) : '(not set)'}`,
-        `  MIMO_API_ENDPOINT: ${process.env.MIMO_API_ENDPOINT ?? '(not set)'}`,
+        `  MIMO_BASE_URL: ${process.env.MIMO_BASE_URL ?? '(not set)'}`,
         '',
         'Usage:',
         '  config set apiKey <key>',
-        '  config set apiEndpoint <url>',
+        '  config set baseUrl <url>',
         '  config set model <model>',
       ].join('\n');
     }
@@ -54,10 +54,10 @@ export const configCommand: Command = {
       const value = parts.slice(2).join(' ');
 
       if (!key || !value) {
-        return 'Usage: config set <key> <value>\nKeys: apiKey, apiEndpoint, model';
+        return 'Usage: config set <key> <value>\nKeys: apiKey, baseUrl, model';
       }
 
-      const allowedKeys = ['apiKey', 'apiEndpoint', 'model', 'theme', 'temperature', 'maxTokens'];
+      const allowedKeys = ['apiKey', 'baseUrl', 'model', 'theme', 'temperature', 'maxTokens'];
       if (!allowedKeys.includes(key)) {
         return `Unknown key: ${key}\nAllowed keys: ${allowedKeys.join(', ')}`;
       }

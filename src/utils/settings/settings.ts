@@ -26,7 +26,7 @@ export async function loadSettings(
   const flagSettings: SettingsJson = {};
   if (cliOptions.model) flagSettings.model = cliOptions.model;
   if (cliOptions.apiKey) flagSettings.apiKey = cliOptions.apiKey;
-  if (cliOptions.apiEndpoint) flagSettings.apiEndpoint = cliOptions.apiEndpoint;
+  if (cliOptions.baseUrl) flagSettings.baseUrl = cliOptions.baseUrl;
   if (cliOptions.theme) flagSettings.theme = cliOptions.theme;
   if (cliOptions.maxTokens) flagSettings.maxTokens = cliOptions.maxTokens;
   if (cliOptions.temperature) flagSettings.temperature = cliOptions.temperature;
@@ -44,9 +44,9 @@ export function resolveApiKey(settings: SettingsJson): string | undefined {
   return settings.apiKey ?? process.env.MIMO_API_KEY ?? process.env.OPENAI_API_KEY;
 }
 
-export function resolveEndpoint(settings: SettingsJson): string {
-  return settings.apiEndpoint
-    ?? process.env.MIMO_API_ENDPOINT
+export function resolveBaseUrl(settings: SettingsJson): string {
+  return settings.baseUrl
+    ?? process.env.MIMO_BASE_URL
     ?? process.env.OPENAI_API_BASE
-    ?? 'https://api.mimo.ai/v1';
+    ?? 'https://api.xiaomimimo.com/v1';
 }

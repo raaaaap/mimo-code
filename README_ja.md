@@ -96,7 +96,8 @@ npm link          # 'mimo' コマンドをグローバルに登録
 **方法 A：環境変数**
 
 ```bash
-export MIMO_API_KEY=your-api-key-here
+export MIMO_API_KEY=sk-your-api-key-here
+export MIMO_BASE_URL=https://api.xiaomimimo.com/v1
 ```
 
 **方法 B：設定ファイル**
@@ -106,12 +107,19 @@ export MIMO_API_KEY=your-api-key-here
 ```json
 {
   "model": "mimo-v2.5",
-  "apiKey": "your-api-key-here",
-  "apiEndpoint": "https://api.mimo.ai/v1"
+  "apiKey": "sk-your-api-key-here",
+  "baseUrl": "https://api.xiaomimimo.com/v1"
 }
 ```
 
 **方法 C：対話型セットアップ** — Mimo Code は初回起動時に設定を促します。
+
+### MiMo API プラン
+
+| プラン | Base URL (OpenAI) | Base URL (Anthropic) | API Key 形式 |
+|--------|-------------------|---------------------|--------------|
+| **従量課金** | `https://api.xiaomimimo.com/v1` | `https://api.xiaomimimo.com/anthropic` | `sk-xxxxx` |
+| **Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `https://token-plan-cn.xiaomimimo.com/anthropic` | `tp-xxxxx` |
 
 ### 実行
 
@@ -139,7 +147,7 @@ mimo [options] [prompt]
 Options:
   -m, --model <model>          使用するモデル（デフォルト："mimo-v2.5"）
   -k, --api-key <key>          API キー
-  --api-endpoint <url>         API エンドポイント URL
+  --base-url <url>             API Base URL
   --mode <mode>                モード：interactive, single, pipe（デフォルト："interactive"）
   -v, --verbose                詳細出力
   --debug                      デバッグモード
@@ -273,8 +281,8 @@ Mimo Code の中核は**クエリループ**（`query.ts`）です：
 
 | 変数 | 説明 |
 |------|------|
-| `MIMO_API_KEY` | MiMo API キー |
-| `MIMO_API_ENDPOINT` | MiMo API エンドポイント（デフォルト：`https://api.mimo.ai/v1`） |
+| `MIMO_API_KEY` | MiMo API キー（`sk-` または `tp-` プレフィックス） |
+| `MIMO_BASE_URL` | MiMo API Base URL（デフォルト：`https://api.xiaomimimo.com/v1`） |
 | `OPENAI_API_KEY` | OpenAI API キー（フォールバック） |
 | `OPENAI_API_BASE` | OpenAI API ベース URL（フォールバック） |
 

@@ -96,7 +96,8 @@ npm link          # 将 mimo 命令注册到全局
 **方式 A：环境变量**
 
 ```bash
-export MIMO_API_KEY=your-api-key-here
+export MIMO_API_KEY=sk-your-api-key-here
+export MIMO_BASE_URL=https://api.xiaomimimo.com/v1
 ```
 
 **方式 B：配置文件**
@@ -106,12 +107,19 @@ export MIMO_API_KEY=your-api-key-here
 ```json
 {
   "model": "mimo-v2.5",
-  "apiKey": "your-api-key-here",
-  "apiEndpoint": "https://api.mimo.ai/v1"
+  "apiKey": "sk-your-api-key-here",
+  "baseUrl": "https://api.xiaomimimo.com/v1"
 }
 ```
 
 **方式 C：交互式设置** — Mimo Code 首次运行时会提示你配置。
+
+### MiMo API 套餐
+
+| 套餐 | Base URL (OpenAI) | Base URL (Anthropic) | API Key 格式 |
+|------|-------------------|---------------------|--------------|
+| **按量付费** | `https://api.xiaomimimo.com/v1` | `https://api.xiaomimimo.com/anthropic` | `sk-xxxxx` |
+| **Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `https://token-plan-cn.xiaomimimo.com/anthropic` | `tp-xxxxx` |
 
 ### 运行
 
@@ -139,7 +147,7 @@ mimo [options] [prompt]
 Options:
   -m, --model <model>          使用的模型（默认："mimo-v2.5"）
   -k, --api-key <key>          API 密钥
-  --api-endpoint <url>         API 端点 URL
+  --base-url <url>             API Base URL
   --mode <mode>                模式：interactive, single, pipe（默认："interactive"）
   -v, --verbose                详细输出
   --debug                      调试模式
@@ -273,8 +281,8 @@ Mimo Code 的核心是**查询循环**（`query.ts`）：
 
 | 变量 | 描述 |
 |------|------|
-| `MIMO_API_KEY` | MiMo API 密钥 |
-| `MIMO_API_ENDPOINT` | MiMo API 端点（默认：`https://api.mimo.ai/v1`） |
+| `MIMO_API_KEY` | MiMo API 密钥（`sk-` 或 `tp-` 前缀） |
+| `MIMO_BASE_URL` | MiMo API Base URL（默认：`https://api.xiaomimimo.com/v1`） |
 | `OPENAI_API_KEY` | OpenAI API 密钥（备选） |
 | `OPENAI_API_BASE` | OpenAI API 基础 URL（备选） |
 

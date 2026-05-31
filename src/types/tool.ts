@@ -21,7 +21,7 @@ export interface ToolDefinition {
 export interface QueryOptions {
   model: string;
   apiKey?: string;
-  apiEndpoint?: string;
+  baseUrl?: string;
   maxTokens?: number;
   temperature?: number;
   verbose?: boolean;

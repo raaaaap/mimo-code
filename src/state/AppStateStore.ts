@@ -7,7 +7,7 @@ export interface AppState {
   sessionId: string;
   isProcessing: boolean;
   model: string;
-  apiEndpoint: string;
+  baseUrl: string;
   totalUsage: TokenUsage;
   settings: SettingsJson;
   settingsLoaded: boolean;
@@ -26,7 +26,7 @@ export const INITIAL_APP_STATE: AppState = {
   sessionId: '',
   isProcessing: false,
   model: 'mimo-v2.5',
-  apiEndpoint: 'https://api.mimo.ai/v1',
+  baseUrl: 'https://api.xiaomimimo.com/v1',
   totalUsage: { inputTokens: 0, outputTokens: 0 },
   settings: {},
   settingsLoaded: false,

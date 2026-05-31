@@ -37,10 +37,10 @@ async function interactiveSetup(): Promise<SettingsJson> {
     process.exit(1);
   }
 
-  const endpoint = await ask('请输入 API Base URL (默认: https://api.mimo.ai/v1): ') || 'https://api.mimo.ai/v1';
+  const baseUrl = await ask('请输入 API Base URL (默认: https://api.xiaomimimo.com/v1): ') || 'https://api.xiaomimimo.com/v1';
   const model = await ask('请输入模型名称 (默认: mimo-v2.5): ') || 'mimo-v2.5';
 
-  const settings: SettingsJson = { apiKey, apiEndpoint: endpoint, model };
+  const settings: SettingsJson = { apiKey, baseUrl, model };
 
   // Save to ~/.mimo/settings.json
   await mkdir(join(homedir(), '.mimo'), { recursive: true });
@@ -48,7 +48,7 @@ async function interactiveSetup(): Promise<SettingsJson> {
 
   console.log(`\n配置已保存到 ${SETTINGS_PATH}`);
   console.log(`  API Key: ****${apiKey.slice(-4)}`);
-  console.log(`  Endpoint: ${endpoint}`);
+  console.log(`  Base URL: ${baseUrl}`);
   console.log(`  Model: ${model}\n`);
 
   return settings;
@@ -64,7 +64,7 @@ export async function run(): Promise<void> {
     .argument('[prompt]', 'Initial prompt (non-interactive mode)')
     .option('-m, --model <model>', 'Model to use')
     .option('-k, --api-key <key>', 'API key')
-    .option('--api-endpoint <url>', 'API endpoint URL')
+    .option('--base-url <url>', 'API base URL')
     .option('--setup', 'Run interactive setup')
     .option('--mode <mode>', 'Mode: interactive, single, pipe', 'interactive')
     .option('-v, --verbose', 'Verbose output', false)
@@ -94,20 +94,20 @@ export async function run(): Promise<void> {
       const cliOptions: CLIOptions = {
         model: options.model ?? settings.model ?? 'mimo-v2.5',
         apiKey: options.apiKey,
-        apiEndpoint: options.apiEndpoint,
+        baseUrl: options.baseUrl,
         mode: (options.mode as CLIOptions['mode']) ?? 'interactive',
         verbose: options.verbose ?? false,
         debug: options.debug ?? false,
         output: (options.output as CLIOptions['output']) ?? 'text',
         noColor: options.noColor ?? false,
         theme: options.theme ?? 'mimo-dark',
-        maxTokens: options.maxTokens ?? 4096,
+        maxTokens: options.maxTokens ?? 8192,
         temperature: options.temperature ?? 0.7,
         permissionMode: options.permissionMode ?? 'default',
       };
 
       const apiKey = resolveApiKey(settings);
-      const endpoint = resolveEndpoint(settings);
+      const baseUrlResolved = resolveBaseUrl(settings);
 
       if (!apiKey) {
         console.error('Error: No API key found. Run "mimo --setup" to configure.');
@@ -116,7 +116,7 @@ export async function run(): Promise<void> {
 
       if (cliOptions.mode === 'interactive' && !prompt) {
         const { launchREPL } = await import('./replLauncher.js');
-        await launchREPL({ ...cliOptions, apiKey, apiEndpoint: endpoint, settings });
+        await launchREPL({ ...cliOptions, apiKey, baseUrl: baseUrlResolved, settings });
       } else if (prompt || cliOptions.mode === 'single') {
         const { runSingleMode } = await import('./modes/single.js');
         const { APIClient } = await import('./services/api/client.js');

@@ -6,7 +6,7 @@ import { REPLScreen } from './screens/REPL.js';
 
 interface REPLLaunchOptions extends CLIOptions {
   apiKey: string;
-  apiEndpoint: string;
+  baseUrl: string;
   settings: SettingsJson;
 }
 
@@ -15,7 +15,7 @@ export async function launchREPL(options: REPLLaunchOptions): Promise<void> {
     <AppStateProvider
       initialState={{
         model: options.model,
-        apiEndpoint: options.apiEndpoint,
+        baseUrl: options.baseUrl,
         theme: options.theme,
         verbose: options.verbose,
         debug: options.debug,

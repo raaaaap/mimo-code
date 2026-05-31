@@ -47,7 +47,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
   const [execStatus, setExecStatus] = useState<'idle' | 'thinking' | 'executing'>('idle');
   const [activeToolName, setActiveToolName] = useState<string>();
 
-  const apiEndpoint = useAppState((s) => s.apiEndpoint);
+  const baseUrl = useAppState((s) => s.baseUrl);
   const debug = useAppState((s) => s.debug);
   const language = useAppState((s) => s.language);
 
@@ -100,7 +100,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
   const contextManager = useRef(new ContextManager({ maxTokens: 8000 }));
   const engineRef = useRef<QueryEngine | null>(null);
   if (!engineRef.current) {
-    const client = new APIClient(apiEndpoint, apiKey);
+    const client = new APIClient(baseUrl, apiKey);
     const toolRegistry = createDefaultRegistry({
       callModel: (req) => client.streamChat(req),
       getTool: (name: string) => toolRegistry.get(name),
@@ -190,7 +190,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
         let errorMsg = 'Unknown error';
         if (err instanceof Error) {
           if (err.message.includes('fetch failed') || err.message.includes('ECONNREFUSED')) {
-            errorMsg = `无法连接到 API 服务器 (${apiEndpoint})\n请检查：\n1. API 端点是否正确\n2. 网络连接是否正常\n3. API 服务是否运行中`;
+            errorMsg = `无法连接到 API 服务器 (${baseUrl})\n请检查：\n1. Base URL 是否正确\n2. 网络连接是否正常\n3. API 服务是否运行中`;
           } else {
             errorMsg = err.message;
           }
@@ -208,7 +208,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
         setCatState('error');
       }
     },
-    [model, store, apiKey, apiEndpoint, verbose, debug],
+    [model, store, apiKey, baseUrl, verbose, debug],
   );
 
   return (
