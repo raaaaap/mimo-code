@@ -16,6 +16,9 @@ import { AgentTool, type AgentToolDeps } from './tools/AgentTool/AgentTool.js';
 import { ToolSearchTool } from './tools/ToolSearchTool/ToolSearchTool.js';
 import { EnterPlanModeTool } from './tools/EnterPlanModeTool/EnterPlanModeTool.js';
 import { ExitPlanModeTool } from './tools/ExitPlanModeTool/ExitPlanModeTool.js';
+import { TaskStopTool } from './tools/TaskStopTool/TaskStopTool.js';
+import { TaskOutputTool } from './tools/TaskOutputTool/TaskOutputTool.js';
+import { SendMessageTool } from './tools/SendMessageTool/SendMessageTool.js';
 
 export class ToolRegistry {
   private tools = new Map<string, Tool>();
@@ -89,5 +92,8 @@ export function createDefaultRegistry(agentDeps?: AgentToolDeps): ToolRegistry {
   registry.register(ToolSearchTool(() => registry.getAll()));
   registry.register(EnterPlanModeTool);
   registry.register(ExitPlanModeTool);
+  registry.register(TaskStopTool());
+  registry.register(TaskOutputTool());
+  registry.register(SendMessageTool());
   return registry;
 }

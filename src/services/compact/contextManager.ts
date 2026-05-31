@@ -174,6 +174,14 @@ export class ContextManager {
       }
     }
 
+    const finalTokens = this.tokenCounter.countMessages(result.messages);
+    if (finalTokens > this.config.maxTokens * 1.2) {
+      const reactiveResult = this.reactiveCompress(result.messages);
+      if (reactiveResult.compressed) {
+        result = reactiveResult;
+      }
+    }
+
     return result.messages;
   }
 }
