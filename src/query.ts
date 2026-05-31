@@ -123,6 +123,7 @@ export async function* queryLoop(
     const thinkingParts: string[] = [];
     const toolCalls: ToolCall[] = [];
     let finishReason: string | undefined;
+    let usage: { inputTokens: number; outputTokens: number } | undefined;
 
     for await (const chunk of deps.callModel(request)) {
       if (chunk.type === 'text' && chunk.content) contentParts.push(chunk.content);
@@ -130,6 +131,7 @@ export async function* queryLoop(
       if (chunk.type === 'tool_use' && chunk.toolCall) toolCalls.push(chunk.toolCall);
       if (chunk.type === 'done') {
         finishReason = chunk.finishReason;
+        usage = chunk.usage;
         break;
       }
       if (chunk.type === 'error') {
@@ -154,6 +156,7 @@ export async function* queryLoop(
       content: fullContent,
       toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
       thinking: thinkingContent,
+      usage,
     };
     messages = [...messages, assistantMessage];
     yield assistantMessage;

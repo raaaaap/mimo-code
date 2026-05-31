@@ -39,6 +39,11 @@ export class QueryEngine {
         this.config.tools,
       )) {
         this.mutableMessages.push(msg);
+        // Accumulate usage
+        if (msg.usage) {
+          this.totalUsage.inputTokens += msg.usage.inputTokens;
+          this.totalUsage.outputTokens += msg.usage.outputTokens;
+        }
         yield msg;
       }
     } finally {
