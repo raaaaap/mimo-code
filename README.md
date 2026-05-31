@@ -36,7 +36,7 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 
 ## ✨ Features
 
-### 🛠️ 13 Built-in Tools
+### 🛠️ 19 Built-in Tools
 
 | Tool | Description | Concurrency |
 |------|-------------|:-----------:|
@@ -53,6 +53,12 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 | **NotebookEdit** | Edit Jupyter notebook cells (insert/delete/replace) | — |
 | **AskUserQuestion** | Interactive multi-choice or open-ended prompts | — |
 | **Agent** | Spawn autonomous sub-agents with full tool access | — |
+| **ToolSearch** | Search available tools by keyword or direct selection | ✅ |
+| **EnterPlanMode** | Enter planning mode (read-only, no writes) | ✅ |
+| **ExitPlanMode** | Exit planning mode and submit plan for approval | — |
+| **TaskOutput** | Get background task output with blocking wait | ✅ |
+| **TaskStop** | Stop a running background task | — |
+| **SendMessage** | Send messages between agents (supports broadcast) | — |
 
 ### 🔌 Multi-Provider API Support
 
@@ -64,12 +70,17 @@ Mimo Code is a terminal-based AI coding assistant that brings the power of the M
 
 - **Rich Terminal UI** — React-based REPL with syntax highlighting, diffs, and progress indicators
 - **Markdown Rendering** — Headers, bold text, tables, and inline code rendered in terminal
+- **Thinking Mode** — Extended reasoning with collapsible thinking process display
+- **Plan Mode** — Read-only planning phase before execution, with user approval
+- **Tool Search** — On-demand tool discovery by keyword or direct selection
+- **Background Tasks** — Task output retrieval and stop control for long-running operations
+- **Inter-Agent Messaging** — Message bus for communication between sub-agents
 - **Multi-language UI** — Switch between 简体中文, English, 日本語 via `/language` command
 - **Xiaomi Cat Mascot** — Animated ASCII companion that reacts to agent state (idle → thinking → coding → success/error)
 - **Permission System** — 5 modes: `default`, `acceptEdits`, `bypassPermissions`, `plan`, `auto`
 - **Plugin System** — Event-driven architecture with `EventBus` and plugin discovery
 - **MCP Client** — Model Context Protocol support via JSON-RPC 2.0 over stdio
-- **Slash Commands** — 15+ commands for session control, model switching, and diagnostics
+- **Slash Commands** — 19 commands for session control, model switching, and diagnostics
 - **Theme System** — 5 built-in themes: `mimo-dark`, `mimo-light`, `dracula`, `nord`, `solarized-dark`
 - **Multi-mode Execution** — Interactive REPL, single-shot prompts, and pipe mode
 
@@ -183,14 +194,25 @@ cat main.ts | mimo --mode pipe "Explain this file"
 | `/compact` | | Compact conversation history |
 | `/config` | | Show current configuration |
 | `/commit` | `/ci` | Stage all changes and commit |
+| `/cost` | | Show cost breakdown |
 | `/diff` | | Show git diff |
 | `/doctor` | | Run diagnostics |
+| `/export` | | Export conversation |
+| `/fast` | | Toggle fast mode |
 | `/model` | `/m` | Show or switch model |
 | `/theme` | `/t` | Show or switch color theme |
 | `/language` | `/lang`, `/locale` | Show or switch UI language (zh-CN, en, ja) |
-| `/usage` | | Show token usage |
-| `/status` | | Show session status |
+| `/mcp` | | MCP server management |
 | `/permissions` | `/perms`, `/perm` | Show or set permission mode |
+| `/plan` | | Enter plan mode |
+| `/rename` | | Rename session |
+| `/resume` | | Resume previous session |
+| `/session` | | Session management |
+| `/skills` | | List available skills |
+| `/status` | | Show session status |
+| `/tasks` | | Task management |
+| `/usage` | | Show token usage |
+| `/buddy` | | Cat mascot settings |
 | `/plan` | | Enter plan mode |
 | `/export` | | Export conversation |
 | `/session` | | Session management |
