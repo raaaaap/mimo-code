@@ -26,6 +26,8 @@ import {
   contextCommand, statsCommand, effortCommand, filesCommand,
   copyCommand, envCommand, initCommand, keybindingsCommand,
   outputStyleCommand, feedbackCommand, sandboxCommand,
+  memoryCommand, reviewCommand, historyCommand, addDirCommand,
+  issueCommand, upgradeCommand,
 } from '../commands/index.js';
 import { CompanionSprite, type CatState } from '../buddy/CompanionSprite.js';
 import { useTheme } from '../utils/useTheme.js';
@@ -100,6 +102,8 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       contextCommand, statsCommand, effortCommand, filesCommand,
       copyCommand, envCommand, initCommand, keybindingsCommand,
       outputStyleCommand, feedbackCommand, sandboxCommand,
+      memoryCommand, reviewCommand, historyCommand, addDirCommand,
+      issueCommand, upgradeCommand,
     ];
     for (const cmd of cmds) commandRegistry.current.register(cmd);
   }, []);

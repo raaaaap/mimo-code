@@ -19,6 +19,8 @@ import { ExitPlanModeTool } from './tools/ExitPlanModeTool/ExitPlanModeTool.js';
 import { TaskStopTool } from './tools/TaskStopTool/TaskStopTool.js';
 import { TaskOutputTool } from './tools/TaskOutputTool/TaskOutputTool.js';
 import { SendMessageTool } from './tools/SendMessageTool/SendMessageTool.js';
+import { ListMcpResourcesTool } from './tools/ListMcpResourcesTool/ListMcpResourcesTool.js';
+import { ReadMcpResourceTool } from './tools/ReadMcpResourceTool/ReadMcpResourceTool.js';
 
 export class ToolRegistry {
   private tools = new Map<string, Tool>();
@@ -95,5 +97,7 @@ export function createDefaultRegistry(agentDeps?: AgentToolDeps): ToolRegistry {
   registry.register(TaskStopTool());
   registry.register(TaskOutputTool());
   registry.register(SendMessageTool());
+  registry.register(ListMcpResourcesTool());
+  registry.register(ReadMcpResourceTool());
   return registry;
 }
