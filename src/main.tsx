@@ -5,7 +5,7 @@ import { writeFile, mkdir, access } from 'node:fs/promises';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import type { CLIOptions, SettingsJson } from './types/config.js';
-import { loadSettings, resolveApiKey, resolveEndpoint } from './utils/settings/settings.js';
+import { loadSettings, resolveApiKey, resolveBaseUrl } from './utils/settings/settings.js';
 
 const SETTINGS_PATH = join(homedir(), '.mimo', 'settings.json');
 
