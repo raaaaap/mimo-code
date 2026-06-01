@@ -388,6 +388,15 @@ npm run dev
 - `test:` — テスト追加または変更
 - `chore:` — ビルド/ツール変更
 
+## 🙏 謝辞
+
+- **[Anthropic](https://www.anthropic.com/)** — このプロジェクトのインスピレーションとなったオリジナルの Claude Code アーキテクチャとデザインパターン
+- **[Ink](https://github.com/vadimdemedes/ink)** — React ベースのターミナル UI フレームワーク
+- **[Commander.js](https://github.com/tj/commander.js)** — CLI 引数パース
+- **[Zod](https://github.com/colinhacks/zod)** — TypeScript ファーストのスキーマ検証
+- **[clipboardy](https://github.com/sindresorhus/clipboardy)** — クロスプラットフォームクリップボードアクセス
+- **[MiMo](https://xiaomimimo.com)** — このアシスタントを動かす大規模言語モデル
+
 ## 📄 ライセンス
 
 このプロジェクトは MIT ライセンスの下でライセンスされています — 詳細は [LICENSE](LICENSE) ファイルを参照。

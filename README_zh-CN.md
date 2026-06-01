@@ -400,6 +400,15 @@ npm run dev
 - `test:` — 测试添加或更改
 - `chore:` — 构建/工具更改
 
+## 🙏 致谢
+
+- **[Anthropic](https://www.anthropic.com/)** — 原创 Claude Code 架构和设计模式，为本项目提供了灵感
+- **[Ink](https://github.com/vadimdemedes/ink)** — 基于 React 的终端 UI 框架
+- **[Commander.js](https://github.com/tj/commander.js)** — CLI 参数解析
+- **[Zod](https://github.com/colinhacks/zod)** — TypeScript 优先的模式验证
+- **[clipboardy](https://github.com/sindresorhus/clipboardy)** — 跨平台剪贴板访问
+- **[MiMo](https://xiaomimimo.com)** — 驱动本助手的大语言模型
+
 ## 📄 许可证
 
 本项目基于 MIT 许可证 — 详见 [LICENSE](LICENSE) 文件。

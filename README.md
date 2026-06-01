@@ -403,6 +403,15 @@ This project follows [Conventional Commits](https://www.conventionalcommits.org/
 - `test:` — Test additions or changes
 - `chore:` — Build/tooling changes
 
+## 🙏 Acknowledgments
+
+- **[Anthropic](https://www.anthropic.com/)** — For the original Claude Code architecture and design patterns that inspired this project
+- **[Ink](https://github.com/vadimdemedes/ink)** — React-based terminal UI framework
+- **[Commander.js](https://github.com/tj/commander.js)** — CLI argument parsing
+- **[Zod](https://github.com/colinhacks/zod)** — TypeScript-first schema validation
+- **[clipboardy](https://github.com/sindresorhus/clipboardy)** — Cross-platform clipboard access
+- **[MiMo](https://xiaomimimo.com)** — The large language model powering this assistant
+
 ## 📄 License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
