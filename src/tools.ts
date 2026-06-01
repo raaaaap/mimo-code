@@ -32,6 +32,7 @@ import { LSPTool } from './tools/LSPTool/LSPTool.js';
 import { MCPTool } from './tools/MCPTool/MCPTool.js';
 import { BriefTool } from './tools/BriefTool/BriefTool.js';
 import { ConfigTool } from './tools/ConfigTool/ConfigTool.js';
+import { ScheduleCronTool } from './tools/ScheduleCronTool/ScheduleCronTool.js';
 
 export class ToolRegistry {
   private tools = new Map<string, Tool>();
@@ -121,5 +122,6 @@ export function createDefaultRegistry(agentDeps?: AgentToolDeps): ToolRegistry {
   registry.register(MCPTool());
   registry.register(BriefTool);
   registry.register(ConfigTool);
+  registry.register(ScheduleCronTool);
   return registry;
 }

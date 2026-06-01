@@ -39,3 +39,4 @@ export { createBuddyCommand } from './buddy.js';
 export { costCommand } from './cost.js';
 export { rewindCommand, REWIND_PREFIX } from './rewind.js';
 export { shareCommand } from './share.js';
+export { onboardingCommand } from './onboarding.js';

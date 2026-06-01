@@ -31,6 +31,7 @@ import {
   issueCommand, upgradeCommand,
   vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
   rewindCommand, REWIND_PREFIX, shareCommand,
+  onboardingCommand,
 } from '../commands/index.js';
 import { CompanionSprite, type CatState } from '../buddy/CompanionSprite.js';
 import { useTheme } from '../utils/useTheme.js';
@@ -127,7 +128,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       memoryCommand, reviewCommand, historyCommand, addDirCommand,
       issueCommand, upgradeCommand,
       vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
-      costCommand, rewindCommand, shareCommand,
+      costCommand, rewindCommand, shareCommand, onboardingCommand,
     ];
     // Register buddy command with deps
     const buddyCommand = createBuddyCommand({
