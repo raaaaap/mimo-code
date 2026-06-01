@@ -5,7 +5,10 @@ import { t } from '../utils/i18n.js';
 function copyToClipboard(text: string): boolean {
   try {
     if (process.platform === 'win32') {
-      execSync('clip', { input: text });
+      // Use PowerShell Set-Clipboard to handle UTF-8 properly
+      // The `clip` command expects UTF-16LE and corrupts non-ASCII characters
+      const escaped = text.replace(/'/g, "''");
+      execSync(`powershell -NoProfile -Command "Set-Clipboard -Value '${escaped}'"`, { encoding: 'utf-8' });
       return true;
     } else if (process.platform === 'darwin') {
       execSync('pbcopy', { input: text });
