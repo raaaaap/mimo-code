@@ -1,39 +1,12 @@
 import type { Command } from '../commands.js';
-import { execSync } from 'node:child_process';
-import { writeFileSync, unlinkSync } from 'node:fs';
-import { join } from 'node:path';
-import { tmpdir } from 'node:os';
+import clipboardy from 'clipboardy';
 import { t } from '../utils/i18n.js';
 
 function copyToClipboard(text: string): boolean {
   try {
-    if (process.platform === 'win32') {
-      // Use PowerShell with stdin pipe to handle all characters safely
-      // Write text to temp file, then pipe to Set-Clipboard
-      const tmpFile = join(tmpdir(), `mimo-clipboard-${Date.now()}.txt`);
-      writeFileSync(tmpFile, text, 'utf-8');
-      try {
-        execSync(
-          `powershell -NoProfile -Command "$content = Get-Content -Raw -Path '${tmpFile}'; Set-Clipboard -Value $content"`,
-          { encoding: 'utf-8', timeout: 5000 }
-        );
-        return true;
-      } finally {
-        try { unlinkSync(tmpFile); } catch { /* ignore */ }
-      }
-    } else if (process.platform === 'darwin') {
-      execSync('pbcopy', { input: text });
-      return true;
-    } else {
-      try {
-        execSync('xclip -selection clipboard', { input: text });
-        return true;
-      } catch {
-        execSync('xsel --clipboard --input', { input: text });
-        return true;
-      }
-    }
-  } catch (error) {
+    clipboardy.writeSync(text);
+    return true;
+  } catch {
     return false;
   }
 }
