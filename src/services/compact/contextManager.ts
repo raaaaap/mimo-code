@@ -158,6 +158,45 @@ export class ContextManager {
     return { messages: result, compressed: true, removedCount: removed, strategy: 'reactive' };
   }
 
+  async smartCompress(messages: Message[], targetTokens: number): Promise<Message[]> {
+    const currentTokens = this.tokenCounter.countMessages(messages);
+    if (currentTokens <= targetTokens) return messages;
+
+    // Strategy 1: Remove empty messages
+    let result = messages.filter(m => {
+      if (typeof m.content === 'string') return m.content.trim().length > 0;
+      return true;
+    });
+
+    // Strategy 2: Truncate old tool outputs
+    result = result.map(m => {
+      if (m.role === 'tool' && typeof m.content === 'string' && m.content.length > 2000) {
+        return { ...m, content: m.content.slice(0, 1000) + '\n\n[...truncated...]\n\n' + m.content.slice(-500) };
+      }
+      return m;
+    });
+
+    // Strategy 3: Summarize old conversation turns
+    const newTokens = this.tokenCounter.countMessages(result);
+    if (newTokens > targetTokens && result.length > 10) {
+      const keepRecent = 6;
+      const oldMessages = result.slice(0, -keepRecent);
+      const recentMessages = result.slice(-keepRecent);
+
+      const summary = oldMessages
+        .filter(m => m.role !== 'system')
+        .map(m => `[${m.role}]: ${typeof m.content === 'string' ? m.content.slice(0, 100) : '[tool result]'}...`)
+        .join('\n');
+
+      result = [
+        { role: 'system' as const, content: `[Conversation summary]\n${summary}` },
+        ...recentMessages,
+      ];
+    }
+
+    return result;
+  }
+
   async compress(messages: Message[]): Promise<Message[]> {
     let result = this.microcompact(messages);
 

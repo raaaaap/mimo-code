@@ -1,29 +1,42 @@
-export interface LspLocation {
+export interface LSPDiagnostic {
   file: string;
   line: number;
   column: number;
-}
-
-export interface LspDiagnostic {
-  line: number;
   message: string;
-  severity: 'error' | 'warning' | 'info';
+  severity: 'error' | 'warning' | 'info' | 'hint';
 }
 
-export class LspClient {
-  async findDefinition(
-    _file: string,
-    _line: number,
-    _column: number,
-  ): Promise<LspLocation | null> {
+export class LSPClient {
+  private diagnostics: LSPDiagnostic[] = [];
+
+  async connect(serverPath: string): Promise<boolean> {
+    // Stub - would connect to language server
+    return false;
+  }
+
+  async getDiagnostics(file: string): Promise<LSPDiagnostic[]> {
+    return this.diagnostics.filter(d => d.file === file);
+  }
+
+  async getDefinition(file: string, line: number, column: number): Promise<string | null> {
     return null;
   }
 
-  async getDiagnostics(_file: string): Promise<LspDiagnostic[]> {
+  async getReferences(file: string, line: number, column: number): Promise<string[]> {
     return [];
   }
 
-  async format(_file: string): Promise<string | null> {
+  async format(file: string): Promise<string | null> {
     return null;
   }
+
+  isConnected(): boolean {
+    return false;
+  }
+
+  disconnect(): void {
+    this.diagnostics = [];
+  }
 }
+
+export const lspClient = new LSPClient();

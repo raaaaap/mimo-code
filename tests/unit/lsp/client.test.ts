@@ -1,26 +1,25 @@
 import { describe, it, expect } from 'vitest';
 import {
-  LspClient,
-  type LspLocation,
-  type LspDiagnostic,
+  LSPClient,
+  type LSPDiagnostic,
 } from '../../../src/services/lsp/client.js';
 
-describe('LspClient', () => {
-  let client: LspClient;
+describe('LSPClient', () => {
+  let client: LSPClient;
 
   beforeEach(() => {
-    client = new LspClient();
+    client = new LSPClient();
   });
 
-  describe('findDefinition', () => {
+  describe('getDefinition', () => {
     it('should return null (stub)', async () => {
-      const result = await client.findDefinition('src/main.ts', 10, 5);
+      const result = await client.getDefinition('src/main.ts', 10, 5);
       expect(result).toBeNull();
     });
 
     it('should accept file, line, and column parameters', async () => {
       // Verify the signature accepts the right types
-      const result: LspLocation | null = await client.findDefinition(
+      const result: string | null = await client.getDefinition(
         'src/index.ts',
         1,
         0,
@@ -35,8 +34,8 @@ describe('LspClient', () => {
       expect(result).toEqual([]);
     });
 
-    it('should return LspDiagnostic[] type', async () => {
-      const result: LspDiagnostic[] = await client.getDiagnostics('any.ts');
+    it('should return LSPDiagnostic[] type', async () => {
+      const result: LSPDiagnostic[] = await client.getDiagnostics('any.ts');
       expect(Array.isArray(result)).toBe(true);
       expect(result).toHaveLength(0);
     });

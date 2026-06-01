@@ -23,6 +23,7 @@ import { ListMcpResourcesTool } from './tools/ListMcpResourcesTool/ListMcpResour
 import { ReadMcpResourceTool } from './tools/ReadMcpResourceTool/ReadMcpResourceTool.js';
 import { EnterWorktreeTool } from './tools/EnterWorktreeTool/EnterWorktreeTool.js';
 import { ExitWorktreeTool } from './tools/ExitWorktreeTool/ExitWorktreeTool.js';
+import { SkillTool } from './tools/SkillTool/SkillTool.js';
 
 export class ToolRegistry {
   private tools = new Map<string, Tool>();
@@ -103,5 +104,6 @@ export function createDefaultRegistry(agentDeps?: AgentToolDeps): ToolRegistry {
   registry.register(ReadMcpResourceTool());
   registry.register(EnterWorktreeTool);
   registry.register(ExitWorktreeTool);
+  registry.register(SkillTool);
   return registry;
 }
