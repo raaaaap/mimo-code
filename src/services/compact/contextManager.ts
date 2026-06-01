@@ -197,6 +197,27 @@ export class ContextManager {
     return result;
   }
 
+  async autoCompact(messages: Message[], maxTokens: number): Promise<Message[]> {
+    const currentTokens = this.tokenCounter.countMessages(messages);
+    if (currentTokens <= maxTokens * 0.8) return messages;
+
+    // Strategy 1: Microcompact (remove empty, truncate long)
+    let result = this.microcompact(messages).messages;
+
+    // Strategy 2: Collapse tool sequences
+    const collapsed = this.collapseToolSequences(result);
+    if (collapsed.compressed) result = collapsed.messages;
+
+    // Strategy 3: Reactive compress (remove old messages)
+    const newTokens = this.tokenCounter.countMessages(result);
+    if (newTokens > maxTokens) {
+      const reactive = this.reactiveCompress(result);
+      if (reactive.compressed) result = reactive.messages;
+    }
+
+    return result;
+  }
+
   async compress(messages: Message[]): Promise<Message[]> {
     let result = this.microcompact(messages);
 
