@@ -66,11 +66,14 @@ Mimo Code is a terminal-based AI coding assistant powered by the MiMo large lang
 
 ### 🔌 Multi-Provider API Support
 
-| Provider | Base URL | Key Format |
-|----------|----------|------------|
-| **MiMo Pay-per-use** | `https://api.xiaomimimo.com/v1` | `sk-xxxxx` |
-| **MiMo Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `tp-xxxxx` |
-| **OpenAI** | Compatible with any OpenAI API endpoint | `sk-xxxxx` |
+| Provider | Base URL | Key Format | Protocol |
+|----------|----------|------------|----------|
+| **MiMo Pay-per-use** | `https://api.xiaomimimo.com/v1` | `sk-xxxxx` | OpenAI |
+| **MiMo Pay-per-use** | `https://api.xiaomimimo.com/anthropic` | `sk-xxxxx` | Anthropic |
+| **MiMo Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `tp-xxxxx` | OpenAI |
+| **MiMo Token Plan** | `https://token-plan-cn.xiaomimimo.com/anthropic` | `tp-xxxxx` | Anthropic |
+| **OpenAI** | Any OpenAI-compatible endpoint | `sk-xxxxx` | OpenAI |
+| **Anthropic** | `https://api.anthropic.com` | `sk-ant-xxxxx` | Anthropic |
 
 ### 🎨 Additional Capabilities
 

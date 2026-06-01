@@ -66,11 +66,14 @@ Mimo Code 是一款终端 AI 编程助手，由 MiMo 大语言模型驱动。基
 
 ### 🔌 多供应商 API 支持
 
-| 供应商 | Base URL | API Key 格式 |
-|--------|----------|--------------|
-| **MiMo 按量付费** | `https://api.xiaomimimo.com/v1` | `sk-xxxxx` |
-| **MiMo Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `tp-xxxxx` |
-| **OpenAI** | 兼容任何 OpenAI API 端点 | `sk-xxxxx` |
+| 供应商 | Base URL | API Key 格式 | 协议 |
+|--------|----------|--------------|------|
+| **MiMo 按量付费** | `https://api.xiaomimimo.com/v1` | `sk-xxxxx` | OpenAI |
+| **MiMo 按量付费** | `https://api.xiaomimimo.com/anthropic` | `sk-xxxxx` | Anthropic |
+| **MiMo Token Plan** | `https://token-plan-cn.xiaomimimo.com/v1` | `tp-xxxxx` | OpenAI |
+| **MiMo Token Plan** | `https://token-plan-cn.xiaomimimo.com/anthropic` | `tp-xxxxx` | Anthropic |
+| **OpenAI** | 任何 OpenAI 兼容端点 | `sk-xxxxx` | OpenAI |
+| **Anthropic** | `https://api.anthropic.com` | `sk-ant-xxxxx` | Anthropic |
 
 ### 🎨 更多能力
 

@@ -4,13 +4,15 @@ import type { Message } from '../../../types/message.js';
 export class AnthropicAdapter implements ModelAdapter {
   readonly name = 'anthropic';
   private apiKey: string;
+  private baseUrl: string;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, baseUrl?: string) {
     this.apiKey = apiKey;
+    this.baseUrl = baseUrl ?? 'https://api.anthropic.com';
   }
 
   supports(model: string): boolean {
-    return model.startsWith('claude-');
+    return model.startsWith('claude-') || model.startsWith('anthropic-');
   }
 
   countTokens(messages: Message[]): number {
@@ -34,7 +36,7 @@ export class AnthropicAdapter implements ModelAdapter {
     };
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch(`${this.baseUrl}/v1/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

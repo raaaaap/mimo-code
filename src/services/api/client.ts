@@ -2,6 +2,7 @@ import type { ModelAdapter, ModelRequest, ModelResponse, StreamChunk } from '../
 import type { Message } from '../../types/message.js';
 import { MimoAdapter } from './adapters/mimo.js';
 import { OpenAIAdapter } from './adapters/openai.js';
+import { AnthropicAdapter } from './adapters/anthropic.js';
 
 export class APIClient {
   private adapters: ModelAdapter[] = [];
@@ -10,6 +11,9 @@ export class APIClient {
   constructor(endpoint: string, apiKey: string) {
     this.defaultAdapter = new OpenAIAdapter(endpoint, apiKey);
     this.adapters.push(new MimoAdapter(endpoint, apiKey));
+    // For Anthropic adapter, detect if the endpoint is Anthropic-compatible
+    const isAnthropicEndpoint = endpoint.includes('anthropic') || apiKey.startsWith('sk-ant-');
+    this.adapters.push(new AnthropicAdapter(apiKey, isAnthropicEndpoint ? endpoint : undefined));
     this.adapters.push(this.defaultAdapter);
   }
 
