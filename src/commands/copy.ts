@@ -1,15 +1,26 @@
 import type { Command } from '../commands.js';
 import { execSync } from 'node:child_process';
+import { writeFileSync, unlinkSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { t } from '../utils/i18n.js';
 
 function copyToClipboard(text: string): boolean {
   try {
     if (process.platform === 'win32') {
-      // Use PowerShell Set-Clipboard to handle UTF-8 properly
-      // The `clip` command expects UTF-16LE and corrupts non-ASCII characters
-      const escaped = text.replace(/'/g, "''");
-      execSync(`powershell -NoProfile -Command "Set-Clipboard -Value '${escaped}'"`, { encoding: 'utf-8' });
-      return true;
+      // Use PowerShell with stdin pipe to handle all characters safely
+      // Write text to temp file, then pipe to Set-Clipboard
+      const tmpFile = join(tmpdir(), `mimo-clipboard-${Date.now()}.txt`);
+      writeFileSync(tmpFile, text, 'utf-8');
+      try {
+        execSync(
+          `powershell -NoProfile -Command "$content = Get-Content -Raw -Path '${tmpFile}'; Set-Clipboard -Value $content"`,
+          { encoding: 'utf-8', timeout: 5000 }
+        );
+        return true;
+      } finally {
+        try { unlinkSync(tmpFile); } catch { /* ignore */ }
+      }
     } else if (process.platform === 'darwin') {
       execSync('pbcopy', { input: text });
       return true;
@@ -22,7 +33,7 @@ function copyToClipboard(text: string): boolean {
         return true;
       }
     }
-  } catch {
+  } catch (error) {
     return false;
   }
 }
@@ -61,7 +72,7 @@ export const copyCommand: Command = {
     }
 
     return context.language === 'zh-CN' ? '复制失败。请确保系统支持剪贴板操作。' :
-           context.language === 'ja' ? 'コピーに失敗しました。システムがクリップボード操作をサポートしていることを確認してください。' :
+           context.language === 'ja' ? 'コピーに失敗しました。' :
            'Copy failed. Please ensure your system supports clipboard operations.';
   },
 };
