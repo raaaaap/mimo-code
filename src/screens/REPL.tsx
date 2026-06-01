@@ -191,7 +191,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
         // Track command usage for personalized TAB menu
         trackCommandUsage(parsed.command.name).then(() => getTopCommands().then(setTopCommands));
 
-        const result = await parsed.command.call(parsed.args, { model, verbose, debug, language });
+        const result = await parsed.command.call(parsed.args, { model, verbose, debug, language, messages: store.getState().messages });
         if (result === CLEAR_SENTINET) {
           store.setState({ messages: [] });
           return;

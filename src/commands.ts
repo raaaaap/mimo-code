@@ -20,6 +20,7 @@ export interface CommandContext {
   verbose: boolean;
   debug: boolean;
   language: Language;
+  messages?: Array<{ role: string; content: string | unknown }>;
 }
 
 export interface Command {

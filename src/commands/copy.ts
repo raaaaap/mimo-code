@@ -5,15 +5,12 @@ import { t } from '../utils/i18n.js';
 function copyToClipboard(text: string): boolean {
   try {
     if (process.platform === 'win32') {
-      // Windows: use clip command
       execSync('clip', { input: text });
       return true;
     } else if (process.platform === 'darwin') {
-      // macOS: use pbcopy
       execSync('pbcopy', { input: text });
       return true;
     } else {
-      // Linux: try xclip, then xsel
       try {
         execSync('xclip -selection clipboard', { input: text });
         return true;
@@ -29,24 +26,35 @@ function copyToClipboard(text: string): boolean {
 
 export const copyCommand: Command = {
   name: 'copy',
-  description: 'Copy text to clipboard',
-  arguments: [{ name: 'text', description: 'Text to copy (or last response if empty)', required: false }],
+  description: 'Copy last response to clipboard',
   isEnabled: () => true,
   call: async (args, context) => {
-    const text = args.trim();
+    // Find the last assistant message
+    const messages = context.messages ?? [];
+    const lastAssistant = [...messages].reverse().find(m => m.role === 'assistant');
 
-    if (!text) {
-      return context.language === 'zh-CN' ? '用法：/copy <要复制的文本>\n\n示例：/copy Hello World' :
-             context.language === 'ja' ? '使い方：/copy <コピーするテキスト>\n\n例：/copy Hello World' :
-             'Usage: /copy <text to copy>\n\nExample: /copy Hello World';
+    if (!lastAssistant) {
+      return context.language === 'zh-CN' ? '没有可复制的回复。' :
+             context.language === 'ja' ? 'コピー可能な応答がありません。' :
+             'No response to copy.';
     }
 
-    const success = copyToClipboard(text);
+    const content = typeof lastAssistant.content === 'string'
+      ? lastAssistant.content
+      : JSON.stringify(lastAssistant.content);
+
+    if (!content || content.trim().length === 0) {
+      return context.language === 'zh-CN' ? '最后一条回复内容为空。' :
+             context.language === 'ja' ? '最後の応答内容が空です。' :
+             'Last response is empty.';
+    }
+
+    const success = copyToClipboard(content);
     if (success) {
-      const preview = text.length > 50 ? text.slice(0, 50) + '...' : text;
-      return context.language === 'zh-CN' ? `已复制到剪贴板：${preview}` :
-             context.language === 'ja' ? `クリップボードにコピーしました：${preview}` :
-             `Copied to clipboard: ${preview}`;
+      const preview = content.length > 80 ? content.slice(0, 80) + '...' : content;
+      return context.language === 'zh-CN' ? `已复制到剪贴板：\n${preview}` :
+             context.language === 'ja' ? `クリップボードにコピーしました：\n${preview}` :
+             `Copied to clipboard:\n${preview}`;
     }
 
     return context.language === 'zh-CN' ? '复制失败。请确保系统支持剪贴板操作。' :
