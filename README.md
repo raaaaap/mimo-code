@@ -36,7 +36,7 @@ Mimo Code is a terminal-based AI coding assistant powered by the MiMo large lang
 
 ## ✨ Features
 
-### 🛠️ 23 Built-in Tools
+### 🛠️ 33 Built-in Tools
 
 | Tool | Description | Concurrency |
 |------|-------------|:-----------:|
@@ -63,6 +63,16 @@ Mimo Code is a terminal-based AI coding assistant powered by the MiMo large lang
 | **ReadMcpResource** | Read MCP resource by URI | ✅ |
 | **EnterWorktree** | Create and enter a git worktree for isolated work | — |
 | **ExitWorktree** | Exit and optionally remove a git worktree | — |
+| **SkillTool** | Invoke skills/slash commands programmatically | — |
+| **LSPTool** | Language Server Protocol for code navigation | ✅ |
+| **MCPTool** | Call tools on connected MCP servers | — |
+| **BriefTool** | Send structured messages with attachments | ✅ |
+| **ConfigTool** | Read/modify settings programmatically | — |
+| **TaskCreate** | Create a new task for tracking | — |
+| **TaskGet** | Get task details by ID | ✅ |
+| **TaskUpdate** | Update task status/title/description | — |
+| **TaskList** | List all tasks with optional filter | ✅ |
+| **ScheduleCron** | Schedule recurring tasks with cron | — |
 
 ### 🔌 Multi-Provider API Support
 
@@ -190,7 +200,7 @@ echo "What does this code do?" | mimo --mode pipe
 cat main.ts | mimo --mode pipe "Explain this file"
 ```
 
-### Slash Commands (46)
+### Slash Commands (48)
 
 | Command | Aliases | Description |
 |---------|---------|-------------|
@@ -228,6 +238,9 @@ cat main.ts | mimo --mode pipe "Explain this file"
 | `/branch` | | Show or switch git branches |
 | `/login` | | Authenticate with MiMo API |
 | `/logout` | | Clear authentication |
+| `/onboarding` | | First-run setup and introduction |
+| `/rewind` | | Undo last N conversation turns |
+| `/share` | | Share current session |
 | `/add-dir` | | Add a working directory |
 | `/copy` | | Copy last response to clipboard |
 | `/env` | | Show relevant environment variables |

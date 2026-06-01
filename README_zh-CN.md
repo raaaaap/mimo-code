@@ -36,7 +36,7 @@ Mimo Code 是一款终端 AI 编程助手，由 MiMo 大语言模型驱动。基
 
 ## ✨ 功能特性
 
-### 🛠️ 23 个内置工具
+### 🛠️ 33 个内置工具
 
 | 工具 | 描述 | 并发 |
 |------|------|:----:|
@@ -63,6 +63,16 @@ Mimo Code 是一款终端 AI 编程助手，由 MiMo 大语言模型驱动。基
 | **ReadMcpResource** | 按 URI 读取 MCP 资源 | ✅ |
 | **EnterWorktree** | 创建并进入 git worktree 进行隔离工作 | — |
 | **ExitWorktree** | 退出并可选删除 git worktree | — |
+| **SkillTool** | 程序化调用技能/斜杠命令 | — |
+| **LSPTool** | 语言服务器协议，代码导航 | ✅ |
+| **MCPTool** | 调用已连接 MCP 服务器上的工具 | — |
+| **BriefTool** | 发送带附件的结构化消息 | ✅ |
+| **ConfigTool** | 程序化读取/修改设置 | — |
+| **TaskCreate** | 创建新任务用于跟踪 | — |
+| **TaskGet** | 按 ID 获取任务详情 | ✅ |
+| **TaskUpdate** | 更新任务状态/标题/描述 | — |
+| **TaskList** | 列出所有任务，可选过滤 | ✅ |
+| **ScheduleCron** | 用 cron 调度定时任务 | — |
 
 ### 🔌 多供应商 API 支持
 
@@ -271,7 +281,7 @@ src/
 │   ├── HighlightedCode/# 语法高亮
 │   └── design-system/ # Button, Card, Table 基础组件
 ├── tools/             # 23 个内置工具实现
-├── commands/          # 46 个斜杠命令（全部支持 i18n）
+├── commands/          # 48 个斜杠命令（全部支持 i18n）
 ├── services/
 │   ├── api/           # API 客户端 + 适配器（OpenAI, MiMo）
 │   ├── tools/         # 工具执行引擎和编排
