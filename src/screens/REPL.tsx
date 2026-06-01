@@ -30,6 +30,7 @@ import {
   createBuddyCommand, costCommand,
   issueCommand, upgradeCommand,
   vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
+  rewindCommand, REWIND_PREFIX, shareCommand,
 } from '../commands/index.js';
 import { CompanionSprite, type CatState } from '../buddy/CompanionSprite.js';
 import { useTheme } from '../utils/useTheme.js';
@@ -126,7 +127,7 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
       memoryCommand, reviewCommand, historyCommand, addDirCommand,
       issueCommand, upgradeCommand,
       vimCommand, loginCommand, logoutCommand, branchCommand, prCommentsCommand,
-      costCommand,
+      costCommand, rewindCommand, shareCommand,
     ];
     // Register buddy command with deps
     const buddyCommand = createBuddyCommand({
@@ -208,6 +209,20 @@ export function REPLScreen({ apiKey }: REPLScreenProps) {
           store.setState({ language: lang as any });
           const confirmMsg: Message = { role: 'assistant', content: `${t(lang as any, 'language_changed')} ${lang}` };
           store.setState({ messages: [...store.getState().messages, confirmMsg] });
+          return;
+        }
+        if (result && result.startsWith(REWIND_PREFIX)) {
+          const count = parseInt(result.slice(REWIND_PREFIX.length)) || 1;
+          const msgs = store.getState().messages;
+          // Each "turn" = user message + assistant response = 2 messages
+          const removeCount = Math.min(count * 2, msgs.length);
+          const confirmMsg: Message = {
+            role: 'assistant',
+            content: language === 'zh-CN' ? `已回退 ${count} 轮对话。` :
+                     language === 'ja' ? `${count} ターンの会話を巻き戻しました。` :
+                     `Rewound ${count} conversation turn(s).`,
+          };
+          store.setState({ messages: [...msgs.slice(0, -removeCount), confirmMsg] });
           return;
         }
         if (result && result.startsWith(PLAN_MODE_PREFIX)) {

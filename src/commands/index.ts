@@ -37,3 +37,5 @@ export { branchCommand } from './branch.js';
 export { prCommentsCommand } from './prComments.js';
 export { createBuddyCommand } from './buddy.js';
 export { costCommand } from './cost.js';
+export { rewindCommand, REWIND_PREFIX } from './rewind.js';
+export { shareCommand } from './share.js';

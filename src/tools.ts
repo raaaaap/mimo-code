@@ -30,6 +30,8 @@ import { TaskUpdateTool } from './tools/TaskUpdateTool/TaskUpdateTool.js';
 import { TaskListTool } from './tools/TaskListTool/TaskListTool.js';
 import { LSPTool } from './tools/LSPTool/LSPTool.js';
 import { MCPTool } from './tools/MCPTool/MCPTool.js';
+import { BriefTool } from './tools/BriefTool/BriefTool.js';
+import { ConfigTool } from './tools/ConfigTool/ConfigTool.js';
 
 export class ToolRegistry {
   private tools = new Map<string, Tool>();
@@ -117,5 +119,7 @@ export function createDefaultRegistry(agentDeps?: AgentToolDeps): ToolRegistry {
   registry.register(TaskListTool);
   registry.register(LSPTool());
   registry.register(MCPTool());
+  registry.register(BriefTool);
+  registry.register(ConfigTool);
   return registry;
 }
