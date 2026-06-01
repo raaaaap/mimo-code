@@ -410,7 +410,7 @@ This project follows [Conventional Commits](https://www.conventionalcommits.org/
 - **[Commander.js](https://github.com/tj/commander.js)** — CLI argument parsing
 - **[Zod](https://github.com/colinhacks/zod)** — TypeScript-first schema validation
 - **[clipboardy](https://github.com/sindresorhus/clipboardy)** — Cross-platform clipboard access
-- **[MiMo](https://xiaomimimo.com)** — The large language model powering this assistant
+- **[MiMo](https://platform.xiaomimimo.com)** — The large language model powering this assistant
 
 ## 📄 License
 

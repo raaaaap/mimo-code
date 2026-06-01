@@ -395,7 +395,7 @@ npm run dev
 - **[Commander.js](https://github.com/tj/commander.js)** — CLI 引数パース
 - **[Zod](https://github.com/colinhacks/zod)** — TypeScript ファーストのスキーマ検証
 - **[clipboardy](https://github.com/sindresorhus/clipboardy)** — クロスプラットフォームクリップボードアクセス
-- **[MiMo](https://xiaomimimo.com)** — このアシスタントを動かす大規模言語モデル
+- **[MiMo](https://platform.xiaomimimo.com)** — このアシスタントを動かす大規模言語モデル
 
 ## 📄 ライセンス
 

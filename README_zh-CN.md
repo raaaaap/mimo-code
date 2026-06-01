@@ -407,7 +407,7 @@ npm run dev
 - **[Commander.js](https://github.com/tj/commander.js)** — CLI 参数解析
 - **[Zod](https://github.com/colinhacks/zod)** — TypeScript 优先的模式验证
 - **[clipboardy](https://github.com/sindresorhus/clipboardy)** — 跨平台剪贴板访问
-- **[MiMo](https://xiaomimimo.com)** — 驱动本助手的大语言模型
+- **[MiMo](https://platform.xiaomimimo.com)** — 驱动本助手的大语言模型
 
 ## 📄 许可证
 
